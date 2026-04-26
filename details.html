@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Details - SaadOps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['Fira Code', 'monospace'] },
+                    colors: { cloud: { 900: '#0a0f1c', 800: '#111827', accent: '#06b6d4' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0a0f1c; color: #f3f4f6; }
+        /* Rich text CKEditor markdown styles */
+        .rich-text h1 { font-size: 2.25rem; font-weight: 800; margin-top: 2rem; margin-bottom: 1rem; color: #fff; }
+        .rich-text h2 { font-size: 1.875rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #f3f4f6; }
+        .rich-text h3 { font-size: 1.5rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #f3f4f6; }
+        .rich-text p { margin-bottom: 1.25rem; line-height: 1.8; color: #d1d5db; }
+        .rich-text ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; color: #d1d5db; }
+        .rich-text ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1.25rem; color: #d1d5db; }
+        .rich-text li { margin-bottom: 0.5rem; }
+        .rich-text a { color: #06b6d4; text-decoration: underline; }
+        .rich-text strong { color: #fff; font-weight: 600; }
+        .rich-text blockquote { border-left: 4px solid #06b6d4; padding-left: 1rem; color: #9ca3af; font-style: italic; margin-bottom: 1.25rem; }
+        .rich-text img { max-width: 100%; border-radius: 0.5rem; margin: 2rem 0; border: 1px solid #1f2937; }
+    </style>
+</head>
+<body class="antialiased">
+    <nav class="w-full bg-cloud-900 border-b border-white/10 p-6 flex justify-between items-center">
+        <a href="/frontend/index.html" class="text-cloud-accent font-mono hover:underline flex items-center gap-2">
+            &lt; cd ..
+        </a>
+    </nav>
+    <main class="max-w-4xl mx-auto px-6 py-12">
+        <div id="loading" class="animate-pulse text-cloud-accent font-mono">Loading data payload...</div>
+        <div id="content-container" style="display: none;">
+            <h1 id="title" class="text-4xl md:text-5xl font-extrabold text-white mb-6"></h1>
+            <div id="tech-stack" class="flex flex-wrap gap-3 font-mono text-sm text-cloud-accent mb-8"></div>
+            <img id="image" src="" alt="Banner" class="w-full h-64 md:h-96 object-cover rounded-xl border border-gray-700 mb-10 shadow-2xl" style="display: none;">
+            
+            <div id="body-content" class="rich-text font-sans">
+                <!-- CKEditor RichText will be injected here safely -->
+            </div>
+        </div>
+    </main>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const type = params.get('type');
+        const slug = params.get('slug');
+
+        if(type && slug) {
+            fetch(`http://127.0.0.1:8000/api/${type}/${slug}/`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('content-container').style.display = 'block';
+                    
+                    document.getElementById('title').textContent = data.title;
+                    
+                    if(data.image) {
+                        const imgEl = document.getElementById('image');
+                        imgEl.src = `http://127.0.0.1:8000${data.image}`;
+                        imgEl.style.display = 'block';
+                    }
+                    
+                    if(data.tech_stack && data.tech_stack.length > 0) {
+                        document.getElementById('tech-stack').innerHTML = data.tech_stack.map(t => `<span class="bg-cloud-800 px-3 py-1 rounded">#${t}</span>`).join('');
+                    }
+
+                    // For RichTextFields
+                    const rawHtml = data.content || data.description || '';
+                    document.getElementById('body-content').innerHTML = rawHtml;
+                })
+                .catch(err => {
+                    document.getElementById('loading').textContent = "ERROR 500: Failed to fetch the resource from the API.";
+                });
+        } else {
+            document.getElementById('loading').textContent = "ERROR 400: Type or Slug parameters missing.";
+        }
+    </script>
+</body>
+</html>
