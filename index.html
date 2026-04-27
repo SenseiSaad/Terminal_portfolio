@@ -156,7 +156,7 @@
                 <a href="#blog" class="hover:text-cloud-accent transition-colors">./blog</a>
                 <a href="#resume" class="hover:text-cloud-accent transition-colors">./resume</a>
                 <a href="#contact" class="hover:text-cloud-accent transition-colors">./contact</a>
-                <a href="https://api.slancer.site/admin/login/?next=/admin/" target="_blank" class="text-cloud-accent hover:text-white transition-colors">./admin_login</a>
+                <a href="http://127.0.0.1:8000/admin/login/?next=/admin/" target="_blank" class="text-cloud-accent hover:text-white transition-colors">./admin_login</a>
             </div>
 
             <!-- Mobile Menu Button -->
@@ -174,7 +174,7 @@
                 <a href="#blog" class="mobile-link text-gray-300 hover:text-cloud-accent">./blog</a>
                 <a href="#resume" class="mobile-link text-gray-300 hover:text-cloud-accent">./resume</a>
                 <a href="#contact" class="mobile-link text-gray-300 hover:text-cloud-accent">./contact</a>
-                <a href="https://api.slancer.site/admin/login/?next=/admin/" target="_blank" class="mobile-link text-cloud-accent hover:text-white">./admin_login</a>
+                <a href="http://127.0.0.1:8000/admin/login/?next=/admin/" target="_blank" class="mobile-link text-cloud-accent hover:text-white">./admin_login</a>
             </div>
         </div>
     </nav>
@@ -202,7 +202,7 @@
                     <a href="#projects" class="btn-glow bg-cloud-accent hover:bg-cloud-accentHover text-white px-8 py-3 rounded-full font-semibold transition-all">
                         View Projects
                     </a>
-                    <a href="https://api.slancer.site/admin/login/?next=/admin/" target="_blank" class="bg-gray-800 border border-gray-600 hover:border-cloud-accent hover:text-cloud-accent text-gray-300 px-8 py-3 rounded-full font-semibold transition-all flex items-center gap-2">
+                    <a href="http://127.0.0.1:8000/admin/login/?next=/admin/" target="_blank" class="bg-gray-800 border border-gray-600 hover:border-cloud-accent hover:text-cloud-accent text-gray-300 px-8 py-3 rounded-full font-semibold transition-all flex items-center gap-2">
                         <i data-lucide="lock" class="w-4 h-4"></i> Admin Login
                     </a>
                     <a href="#contact" class="bg-transparent border border-gray-600 hover:border-cloud-accent text-white px-8 py-3 rounded-full font-semibold transition-all flex items-center gap-2">
@@ -769,7 +769,7 @@
                                 <div class="flex flex-col ${isReverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-12 group reveal active snap-center shrink-0 w-full" style="transition-delay: ${idx*100}ms;">
                                     <div class="w-full md:w-1/2 relative rounded-xl overflow-hidden shadow-2xl border border-gray-700 group-hover:border-cloud-accent transition-all duration-300">
                                         <div class="absolute inset-0 bg-cloud-accent/20 group-hover:bg-transparent transition-all z-10 duration-300"></div>
-                                        ${exp.image ? `<img src="http://127.0.0.1:8000${exp.image}" alt="${exp.company}" class="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-105">` : '<div class="w-full h-48 bg-cloud-800"></div>'}
+                                        ${exp.image ? `<img src="${exp.image}" alt="${exp.company}" class="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-105">` : '<div class="w-full h-48 bg-cloud-800"></div>'}
                                     </div>
                                     <div class="w-full md:w-1/2 ${isReverse ? 'text-left md:text-left' : 'md:text-right text-left'}">
                                         <p class="font-mono text-cloud-accent text-sm mb-2">${exp.role} (${exp.start_date} – ${exp.end_date || 'Present'})</p>
@@ -796,7 +796,15 @@
                         container.innerHTML = '<div class="text-gray-400 p-6">No projects yet.</div>';
                     } else {
                         projects.forEach((proj, idx) => {
-                            let stackHtml = (proj.tech_stack || []).map(t => `<span>#${t}</span>`).join('');
+                            let raw_ts = proj.tech_stack;
+                            let ts = [];
+                            if (Array.isArray(raw_ts)) { ts = raw_ts; }
+                            else if (raw_ts && Array.isArray(raw_ts.tech_stack)) { ts = raw_ts.tech_stack; }
+                            else if (typeof raw_ts === 'string') {
+                                try { let parsed = JSON.parse(raw_ts); ts = Array.isArray(parsed) ? parsed : (parsed.tech_stack || []); } 
+                                catch(e) { ts = raw_ts.split(',').map(s=>s.trim()); }
+                            }
+                            let stackHtml = ts.map(t => `<span>#${t}</span>`).join('');
                             let linksHtml = '';
                             if(proj.github_url) linksHtml += `<a href="${proj.github_url}" target="_blank" class="hover:text-cloud-accent transition-colors" title="GitHub Repository"><i data-lucide="github" class="w-6 h-6"></i></a>`;
                             if(proj.live_url) linksHtml += `<a href="${proj.live_url}" target="_blank" class="hover:text-cloud-accent transition-colors" title="Live URL"><i data-lucide="external-link" class="w-6 h-6"></i></a>`;
@@ -811,7 +819,7 @@
                                         </div>
                                     </div>
                                     <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-cloud-accent transition-colors">${proj.title}</h3>
-                                    ${proj.image ? `<img src="http://127.0.0.1:8000${proj.image}" class="mb-4 w-full h-40 object-cover rounded border border-gray-700">` : ''}
+                                    ${proj.image ? `<img src="${proj.image}" class="mb-4 w-full h-40 object-cover rounded border border-gray-700">` : ''}
                                     <div class="text-gray-400 text-sm mb-4 leading-relaxed line-clamp-4">${proj.description}</div>
                                 </div>
                                 <div class="px-8 py-5 bg-cloud-800/50 border-t border-gray-700">
@@ -839,7 +847,7 @@
                         blogs.forEach((blog, idx) => {
                             container.innerHTML += `
                             <a href="/frontend/details.html?type=blogs&slug=${blog.slug}" class="flex flex-col w-[85vw] md:w-[calc(33.333%-1rem)] shrink-0 snap-center group reveal active bg-cloud-800 rounded-xl overflow-hidden border border-gray-700 hover:border-cloud-accent hover:-translate-y-2 transition-all duration-300" style="transition-delay: ${idx*100}ms;">
-                                ${blog.image ? `<img src="http://127.0.0.1:8000${blog.image}" class="w-full h-40 object-cover border-b border-gray-700">` : ''}
+                                ${blog.image ? `<img src="${blog.image}" class="w-full h-40 object-cover border-b border-gray-700">` : ''}
                                 <div class="p-6">
                                     <div class="flex justify-between items-center mb-4 text-gray-400">
                                         <i data-lucide="folder" class="text-cloud-accent w-8 h-8"></i>

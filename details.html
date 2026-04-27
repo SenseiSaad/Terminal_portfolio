@@ -65,12 +65,20 @@
                     
                     if(data.image) {
                         const imgEl = document.getElementById('image');
-                        imgEl.src = `http://127.0.0.1:8000${data.image}`;
+                        imgEl.src = `${data.image}`;
                         imgEl.style.display = 'block';
                     }
                     
-                    if(data.tech_stack && data.tech_stack.length > 0) {
-                        document.getElementById('tech-stack').innerHTML = data.tech_stack.map(t => `<span class="bg-cloud-800 px-3 py-1 rounded">#${t}</span>`).join('');
+                    let raw_ts = data.tech_stack;
+                    let tsArray = [];
+                    if (Array.isArray(raw_ts)) { tsArray = raw_ts; }
+                    else if (raw_ts && Array.isArray(raw_ts.tech_stack)) { tsArray = raw_ts.tech_stack; }
+                    else if (typeof raw_ts === 'string') {
+                        try { let parsed = JSON.parse(raw_ts); tsArray = Array.isArray(parsed) ? parsed : (parsed.tech_stack || []); } 
+                        catch(e) { tsArray = raw_ts.split(',').map(s=>s.trim()); }
+                    }
+                    if(tsArray.length > 0) {
+                        document.getElementById('tech-stack').innerHTML = tsArray.map(t => `<span class="bg-cloud-800 px-3 py-1 rounded">#${t}</span>`).join('');
                     }
 
                     // For RichTextFields
