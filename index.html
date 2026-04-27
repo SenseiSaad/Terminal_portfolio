@@ -766,7 +766,7 @@
                             let rowClass = isReverse ? "md:flex-row-reverse md:text-left" : "md:flex-row md:text-right";
                             let ulClass = isReverse ? "md:justify-start" : "md:justify-end";
                             container.innerHTML += `
-                                <div class="flex flex-col ${isReverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-12 group reveal active snap-center shrink-0 w-full cursor-pointer hover:opacity-90 transition-opacity" style="transition-delay: ${idx*100}ms;" onclick="window.open('/frontend/details.html?type=experience&slug=' + exp.id, '_blank')">
+                                <div class="flex flex-col ${isReverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-12 group reveal active snap-center shrink-0 w-full cursor-pointer hover:opacity-90 transition-opacity" style="transition-delay: ${idx*100}ms;" onclick="window.location.href='./details.html?type=experience&slug=' + exp.id">
                                     <div class="w-full md:w-1/2 relative rounded-xl overflow-hidden shadow-2xl border border-gray-700 group-hover:border-cloud-accent transition-all duration-300">
                                         <div class="absolute inset-0 bg-cloud-accent/20 group-hover:bg-transparent transition-all z-10 duration-300"></div>
                                         ${exp.image ? `<img src="${exp.image}" alt="${exp.company}" class="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-105">` : '<div class="w-full h-48 bg-cloud-800"></div>'}
@@ -810,7 +810,7 @@
                             if(proj.live_url) linksHtml += `<a href="${proj.live_url}" target="_blank" class="hover:text-cloud-accent transition-colors" title="Live URL"><i data-lucide="external-link" class="w-6 h-6"></i></a>`;
                             
                             container.innerHTML += `
-                            <div class="flex flex-col w-[85vw] md:w-[calc(50%-1rem)] shrink-0 snap-center group reveal active bg-cloud-900 rounded-xl overflow-hidden border border-gray-700 hover:border-cloud-accent transition-all duration-300" style="transition-delay: ${idx*100}ms;" onclick="window.open('/frontend/details.html?type=projects&slug=${proj.slug}', '_blank')">
+                            <div class="flex flex-col w-[85vw] md:w-[calc(50%-1rem)] shrink-0 snap-center group reveal active bg-cloud-900 rounded-xl overflow-hidden border border-gray-700 hover:border-cloud-accent transition-all duration-300" style="transition-delay: ${idx*100}ms;" onclick="window.location.href='./details.html?type=projects&slug=${proj.slug}'">
                                 <div class="p-8 flex-grow cursor-pointer">
                                     <div class="flex justify-between items-center mb-6">
                                         <i data-lucide="server" class="text-cloud-accent w-10 h-10"></i>
@@ -846,7 +846,7 @@
                     } else {
                         blogs.forEach((blog, idx) => {
                             container.innerHTML += `
-                            <a href="/frontend/details.html?type=blogs&slug=${blog.slug}" target="_blank" class="flex flex-col w-[85vw] md:w-[calc(33.333%-1rem)] shrink-0 snap-center group reveal active bg-cloud-800 rounded-xl overflow-hidden border border-gray-700 hover:border-cloud-accent hover:-translate-y-2 transition-all duration-300" style="transition-delay: ${idx*100}ms;">
+                            <a href="./details.html?type=blogs&slug=${blog.slug}" class="flex flex-col w-[85vw] md:w-[calc(33.333%-1rem)] shrink-0 snap-center group reveal active bg-cloud-800 rounded-xl overflow-hidden border border-gray-700 hover:border-cloud-accent hover:-translate-y-2 transition-all duration-300" style="transition-delay: ${idx*100}ms;">
                                 ${blog.image ? `<img src="${blog.image}" class="w-full h-40 object-cover border-b border-gray-700">` : ''}
                                 <div class="p-6">
                                     <div class="flex justify-between items-center mb-4 text-gray-400">
