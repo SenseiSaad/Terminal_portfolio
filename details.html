@@ -39,15 +39,21 @@
     </nav>
     <main class="max-w-4xl mx-auto px-6 py-12">
         <div id="loading" class="animate-pulse text-cloud-accent font-mono">Loading data payload...</div>
+        
+        
         <div id="content-container" style="display: none;">
+            <div id="date-text" class="text-gray-400 font-mono text-sm mb-4"></div>
             <h1 id="title" class="text-4xl md:text-5xl font-extrabold text-white mb-6"></h1>
+            <div id="links-container" class="flex flex-wrap gap-4 mb-8" style="display: none;"></div>
             <div id="tech-stack" class="flex flex-wrap gap-3 font-mono text-sm text-cloud-accent mb-8"></div>
-            <img id="image" src="" alt="Banner" class="w-full h-64 md:h-96 object-cover rounded-xl border border-gray-700 mb-10 shadow-2xl" style="display: none;">
+            <img id="image" src="" alt="Banner" class="w-full h-auto max-h-[60vh] object-contain rounded-xl border border-gray-700 mb-10 shadow-2xl bg-cloud-800" style="display: none;">
             
             <div id="body-content" class="rich-text font-sans">
                 <!-- CKEditor RichText will be injected here safely -->
             </div>
         </div>
+
+
     </main>
     <script>
         const params = new URLSearchParams(window.location.search);
@@ -61,7 +67,32 @@
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('content-container').style.display = 'block';
                     
-                    document.getElementById('title').textContent = data.title;
+                    
+                    // Set title
+                    let docTitle = data.title || (data.role && data.company ? `${data.role} at ${data.company}` : 'Details');
+                    document.getElementById('title').textContent = docTitle;
+                    document.title = `${docTitle} - SaadOps`;
+
+                    // Set Date
+                    let dateText = '';
+                    if (data.created_at) {
+                        dateText = new Date(data.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+                    } else if (data.start_date) {
+                        dateText = `${data.start_date} – ${data.end_date || 'Present'}`;
+                    }
+                    if (dateText) {
+                        document.getElementById('date-text').textContent = dateText;
+                    }
+
+                    // Links
+                    let linksHtml = '';
+                    if (data.github_url) linksHtml += `<a href="${data.github_url}" target="_blank" class="flex items-center gap-2 text-cloud-accent hover:text-white border border-cloud-accent px-4 py-2 rounded transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg> GitHub</a>`;
+                    if (data.live_url) linksHtml += `<a href="${data.live_url}" target="_blank" class="flex items-center gap-2 text-cloud-accent hover:text-white border border-cloud-accent px-4 py-2 rounded transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg> Live Demo</a>`;
+                    if (linksHtml) {
+                        const lc = document.getElementById('links-container');
+                        lc.innerHTML = linksHtml;
+                        lc.style.display = 'flex';
+                    }
                     
                     if(data.image) {
                         const imgEl = document.getElementById('image');
@@ -81,9 +112,21 @@
                         document.getElementById('tech-stack').innerHTML = tsArray.map(t => `<span class="bg-cloud-800 px-3 py-1 rounded">#${t}</span>`).join('');
                     }
 
-                    // For RichTextFields
-                    const rawHtml = data.content || data.description || '';
+                    // For RichTextFields - use content if it has text, else fallback to description
+                    let rawHtml = '';
+                    if (type === 'experience') {
+                        rawHtml = data.description || '';
+                    } else {
+                        // Projects and blogs might use content over description for the full body
+                        let contentHtml = data.content ? data.content.replace(/<[^>]*>?/gm, '').trim() : '';
+                        if (contentHtml.length > 0) {
+                            rawHtml = data.content;
+                        } else {
+                            rawHtml = data.description || '';
+                        }
+                    }
                     document.getElementById('body-content').innerHTML = rawHtml;
+
                 })
                 .catch(err => {
                     document.getElementById('loading').textContent = "ERROR 500: Failed to fetch the resource from the API.";
