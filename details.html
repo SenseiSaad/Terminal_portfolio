@@ -2,71 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Details - SaadOps</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['Fira Code', 'monospace'] },
-                    colors: { cloud: { 900: '#0a0f1c', 800: '#111827', accent: '#06b6d4' } }
+                    colors: { cloud: { 950: '#030712', 900: '#0a0f1c', 800: '#111827', accent: '#06b6d4', accentHover: '#0891b2' } }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #0a0f1c; color: #f3f4f6; }
-        /* Rich text CKEditor markdown styles */
-        .rich-text h1 { font-size: 2.25rem; font-weight: 800; margin-top: 2rem; margin-bottom: 1rem; color: #fff; }
-        .rich-text h2 { font-size: 1.875rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #f3f4f6; }
+        body { background-color: #030712; color: #f3f4f6; }
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+        .glass {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* Rich text markdown styles */
+        .rich-text h1 { font-size: 2.25rem; font-weight: 800; margin-top: 2.5rem; margin-bottom: 1.25rem; color: #fff; }
+        .rich-text h2 { font-size: 1.875rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; color: #f3f4f6; }
         .rich-text h3 { font-size: 1.5rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #f3f4f6; }
-        .rich-text p { margin-bottom: 1.25rem; line-height: 1.8; color: #d1d5db; }
-        .rich-text ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; color: #d1d5db; }
-        .rich-text ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1.25rem; color: #d1d5db; }
-        .rich-text li { margin-bottom: 0.5rem; }
-        .rich-text a { color: #06b6d4; text-decoration: underline; }
+        .rich-text p { margin-bottom: 1.5rem; line-height: 1.8; color: #d1d5db; font-size: 1.1rem; }
+        .rich-text ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.5rem; color: #d1d5db; }
+        .rich-text ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1.5rem; color: #d1d5db; }
+        .rich-text li { margin-bottom: 0.75rem; }
+        .rich-text a { color: #06b6d4; text-decoration: underline; transition: color 0.2s; }
+        .rich-text a:hover { color: #0891b2; }
         .rich-text strong { color: #fff; font-weight: 600; }
-        .rich-text blockquote { border-left: 4px solid #06b6d4; padding-left: 1rem; color: #9ca3af; font-style: italic; margin-bottom: 1.25rem; }
-        .rich-text img { max-width: 100%; border-radius: 0.5rem; margin: 2rem 0; border: 1px solid #1f2937; }
+        .rich-text blockquote { border-left: 4px solid #06b6d4; padding-left: 1.5rem; color: #9ca3af; font-style: italic; margin-bottom: 1.5rem; background: rgba(6, 182, 212, 0.05); padding: 1rem 1.5rem; border-radius: 0 0.5rem 0.5rem 0; }
+        .rich-text img { max-width: 100%; border-radius: 1rem; margin: 2.5rem 0; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
+        .rich-text code { background: #1f2937; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: 'Fira Code', monospace; font-size: 0.9em; color: #06b6d4; }
     </style>
 </head>
-<body class="antialiased">
-    <nav class="w-full bg-cloud-900 border-b border-white/10 p-6 flex justify-between items-center">
-        <a href="/frontend/index.html" class="text-cloud-accent font-mono hover:underline flex items-center gap-2">
-            &lt; cd ..
-        </a>
-    </nav>
-    <main class="max-w-4xl mx-auto px-6 py-12">
-        <div id="loading" class="animate-pulse text-cloud-accent font-mono">Loading data payload...</div>
-        
-        
-        <div id="content-container" style="display: none;">
-            <div id="date-text" class="text-gray-400 font-mono text-sm mb-4"></div>
-            <h1 id="title" class="text-4xl md:text-5xl font-extrabold text-white mb-6"></h1>
-            <div id="links-container" class="flex flex-wrap gap-4 mb-8" style="display: none;"></div>
-            <div id="tech-stack" class="flex flex-wrap gap-3 font-mono text-sm text-cloud-accent mb-8"></div>
-            <img id="image" src="" alt="Banner" class="w-full h-auto max-h-[60vh] object-contain rounded-xl border border-gray-700 mb-10 shadow-2xl bg-cloud-800" style="display: none;">
-            
-            <div id="body-content" class="rich-text font-sans">
-                <!-- CKEditor RichText will be injected here safely -->
-            </div>
+<body class="antialiased min-h-screen relative">
+    <div class="fixed inset-0 bg-grid z-0 pointer-events-none"></div>
+    <div class="fixed top-0 left-0 right-0 h-96 bg-gradient-to-b from-cloud-accent/10 to-transparent z-0 pointer-events-none"></div>
+
+    <nav class="sticky top-0 w-full z-50 glass border-b border-white/5 px-6 py-4">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <a href="./index.html" class="text-cloud-accent font-mono hover:text-white transition-colors flex items-center gap-2 group">
+                <i data-lucide="chevron-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                <span>cd ..</span>
+            </a>
+            <div class="text-gray-500 font-mono text-xs uppercase tracking-widest hidden sm:block">Details View // SaadOps</div>
         </div>
+    </nav>
 
+    <main class="max-w-5xl mx-auto px-6 py-16 relative z-10">
+        <div id="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
+            <div class="w-12 h-12 border-4 border-cloud-accent/20 border-t-cloud-accent rounded-full animate-spin"></div>
+            <p class="text-cloud-accent font-mono animate-pulse">Fetching data payload...</p>
+        </div>
+        
+        <article id="content-container" style="display: none;" class="space-y-12">
+            <header class="space-y-6">
+                <div id="date-text" class="inline-block px-3 py-1 bg-cloud-accent/10 border border-cloud-accent/20 rounded-full text-cloud-accent font-mono text-xs"></div>
+                <h1 id="title" class="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight"></h1>
+                
+                <div id="tech-stack" class="flex flex-wrap gap-2 pt-2"></div>
+                
+                <div id="links-container" class="flex flex-wrap gap-4 pt-4" style="display: none;"></div>
+            </header>
 
+            <div id="image-container" class="relative group" style="display: none;">
+                <div class="absolute -inset-4 bg-cloud-accent/20 blur-3xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                <img id="image" src="" alt="Banner" class="relative w-full h-auto max-h-[70vh] object-cover rounded-2xl border border-white/10 shadow-2xl bg-cloud-900">
+            </div>
+            
+            <div class="glass p-8 md:p-12 rounded-3xl">
+                <div id="body-content" class="rich-text font-sans">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+
+            <footer class="pt-12 border-t border-white/5 flex flex-col items-center gap-6">
+                <p class="text-gray-500 font-mono text-sm">End of record.</p>
+                <a href="./index.html" class="bg-gray-800 hover:bg-cloud-accent text-white px-8 py-3 rounded-full font-semibold transition-all flex items-center gap-2 group">
+                    <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                    Back to Portfolio
+                </a>
+            </footer>
+        </article>
     </main>
+
     <script>
+        // Initialize Lucide
+        lucide.createIcons();
+
         const params = new URLSearchParams(window.location.search);
         const type = params.get('type');
         const slug = params.get('slug');
 
         if(type && slug) {
             fetch(`https://api.slancer.site/api/${type}/${slug}/`)
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) throw new Error('API request failed');
+                    return res.json();
+                })
                 .then(data => {
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('content-container').style.display = 'block';
-                    
                     
                     // Set title
                     let docTitle = data.title || (data.role && data.company ? `${data.role} at ${data.company}` : 'Details');
@@ -82,24 +128,40 @@
                     }
                     if (dateText) {
                         document.getElementById('date-text').textContent = dateText;
+                    } else {
+                        document.getElementById('date-text').style.display = 'none';
                     }
 
                     // Links
                     let linksHtml = '';
-                    if (data.github_url) linksHtml += `<a href="${data.github_url}" target="_blank" class="flex items-center gap-2 text-cloud-accent hover:text-white border border-cloud-accent px-4 py-2 rounded transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg> GitHub</a>`;
-                    if (data.live_url) linksHtml += `<a href="${data.live_url}" target="_blank" class="flex items-center gap-2 text-cloud-accent hover:text-white border border-cloud-accent px-4 py-2 rounded transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg> Live Demo</a>`;
+                    if (data.github_url) {
+                        linksHtml += `
+                            <a href="${data.github_url}" target="_blank" class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 border border-white/10 px-5 py-2.5 rounded-xl transition-all shadow-lg hover:-translate-y-0.5">
+                                <i data-lucide="github" class="w-5 h-5 text-white"></i>
+                                <span class="font-semibold text-sm">GitHub Repository</span>
+                            </a>`;
+                    }
+                    if (data.live_url) {
+                        linksHtml += `
+                            <a href="${data.live_url}" target="_blank" class="flex items-center gap-2 bg-cloud-accent hover:bg-cloud-accentHover text-white px-5 py-2.5 rounded-xl transition-all shadow-lg hover:-translate-y-0.5 shadow-cloud-accent/20">
+                                <i data-lucide="external-link" class="w-5 h-5"></i>
+                                <span class="font-semibold text-sm">Live Preview</span>
+                            </a>`;
+                    }
                     if (linksHtml) {
                         const lc = document.getElementById('links-container');
                         lc.innerHTML = linksHtml;
                         lc.style.display = 'flex';
+                        lucide.createIcons();
                     }
                     
                     if(data.image) {
                         const imgEl = document.getElementById('image');
-                        imgEl.src = `${data.image}`;
-                        imgEl.style.display = 'block';
+                        imgEl.src = data.image;
+                        document.getElementById('image-container').style.display = 'block';
                     }
                     
+                    // Tech Stack
                     let raw_ts = data.tech_stack;
                     let tsArray = [];
                     if (Array.isArray(raw_ts)) { tsArray = raw_ts; }
@@ -109,30 +171,46 @@
                         catch(e) { tsArray = raw_ts.split(',').map(s=>s.trim()); }
                     }
                     if(tsArray.length > 0) {
-                        document.getElementById('tech-stack').innerHTML = tsArray.map(t => `<span class="bg-cloud-800 px-3 py-1 rounded">#${t}</span>`).join('');
+                        document.getElementById('tech-stack').innerHTML = tsArray.map(t => `<span class="bg-cloud-accent/10 border border-cloud-accent/20 text-cloud-accent px-3 py-1 rounded text-xs font-mono">#${t}</span>`).join('');
                     }
 
-                    // For RichTextFields - use content if it has text, else fallback to description
+                    // Content Injection
                     let rawHtml = '';
                     if (type === 'experience') {
                         rawHtml = data.description || '';
+                    } else if (type === 'blogs') {
+                        rawHtml = data.content || data.description || '';
                     } else {
-                        // Projects and blogs might use content over description for the full body
-                        let contentHtml = data.content ? data.content.replace(/<[^>]*>?/gm, '').trim() : '';
-                        if (contentHtml.length > 0) {
-                            rawHtml = data.content;
-                        } else {
-                            rawHtml = data.description || '';
-                        }
+                        // Projects
+                        rawHtml = data.content || data.description || '';
                     }
                     document.getElementById('body-content').innerHTML = rawHtml;
 
+                    // Re-initialize icons for dynamic content
+                    lucide.createIcons();
+
                 })
                 .catch(err => {
-                    document.getElementById('loading').textContent = "ERROR 500: Failed to fetch the resource from the API.";
+                    document.getElementById('loading').innerHTML = `
+                        <div class="text-center space-y-4">
+                            <i data-lucide="alert-circle" class="w-16 h-16 text-red-500 mx-auto"></i>
+                            <h2 class="text-2xl font-bold text-white">System Error 500</h2>
+                            <p class="text-gray-400">Unable to retrieve the requested record from slancer.site API.</p>
+                            <a href="/frontend/index.html" class="inline-block mt-4 text-cloud-accent hover:underline font-mono">Return home</a>
+                        </div>
+                    `;
+                    lucide.createIcons();
                 });
         } else {
-            document.getElementById('loading').textContent = "ERROR 400: Type or Slug parameters missing.";
+            document.getElementById('loading').innerHTML = `
+                <div class="text-center space-y-4">
+                    <i data-lucide="help-circle" class="w-16 h-16 text-yellow-500 mx-auto"></i>
+                    <h2 class="text-2xl font-bold text-white">Invalid Request 400</h2>
+                    <p class="text-gray-400">Missing Type or Slug parameters in the payload header.</p>
+                    <a href="/frontend/index.html" class="inline-block mt-4 text-cloud-accent hover:underline font-mono">Return home</a>
+                </div>
+            `;
+            lucide.createIcons();
         }
     </script>
 </body>
