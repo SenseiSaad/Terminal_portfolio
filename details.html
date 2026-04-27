@@ -55,7 +55,7 @@
         const slug = params.get('slug');
 
         if(type && slug) {
-            fetch(`http://127.0.0.1:8000/api/${type}/${slug}/`)
+            fetch(`https://api.slancer.site/api/${type}/${slug}/`)
                 .then(res => res.json())
                 .then(data => {
                     document.getElementById('loading').style.display = 'none';

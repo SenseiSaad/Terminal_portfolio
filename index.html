@@ -156,7 +156,7 @@
                 <a href="#blog" class="hover:text-cloud-accent transition-colors">./blog</a>
                 <a href="#resume" class="hover:text-cloud-accent transition-colors">./resume</a>
                 <a href="#contact" class="hover:text-cloud-accent transition-colors">./contact</a>
-                <a href="http://127.0.0.1:8000/admin/login/?next=/admin/" target="_blank" class="text-cloud-accent hover:text-white transition-colors">./admin_login</a>
+                <a href="https://api.slancer.site/admin/login/?next=/admin/" target="_blank" class="text-cloud-accent hover:text-white transition-colors">./admin_login</a>
             </div>
 
             <!-- Mobile Menu Button -->
@@ -174,7 +174,7 @@
                 <a href="#blog" class="mobile-link text-gray-300 hover:text-cloud-accent">./blog</a>
                 <a href="#resume" class="mobile-link text-gray-300 hover:text-cloud-accent">./resume</a>
                 <a href="#contact" class="mobile-link text-gray-300 hover:text-cloud-accent">./contact</a>
-                <a href="http://127.0.0.1:8000/admin/login/?next=/admin/" target="_blank" class="mobile-link text-cloud-accent hover:text-white">./admin_login</a>
+                <a href="https://api.slancer.site/admin/login/?next=/admin/" target="_blank" class="mobile-link text-cloud-accent hover:text-white">./admin_login</a>
             </div>
         </div>
     </nav>
@@ -202,7 +202,7 @@
                     <a href="#projects" class="btn-glow bg-cloud-accent hover:bg-cloud-accentHover text-white px-8 py-3 rounded-full font-semibold transition-all">
                         View Projects
                     </a>
-                    <a href="http://127.0.0.1:8000/admin/login/?next=/admin/" target="_blank" class="bg-gray-800 border border-gray-600 hover:border-cloud-accent hover:text-cloud-accent text-gray-300 px-8 py-3 rounded-full font-semibold transition-all flex items-center gap-2">
+                    <a href="https://api.slancer.site/admin/login/?next=/admin/" target="_blank" class="bg-gray-800 border border-gray-600 hover:border-cloud-accent hover:text-cloud-accent text-gray-300 px-8 py-3 rounded-full font-semibold transition-all flex items-center gap-2">
                         <i data-lucide="lock" class="w-4 h-4"></i> Admin Login
                     </a>
                     <a href="#contact" class="bg-transparent border border-gray-600 hover:border-cloud-accent text-white px-8 py-3 rounded-full font-semibold transition-all flex items-center gap-2">
@@ -752,7 +752,7 @@
     async function loadDynamicContent() {
         try {
             // Freelance / Experience
-            const resExp = await fetch('http://127.0.0.1:8000/api/experience/');
+            const resExp = await fetch('https://api.slancer.site/api/experience/');
             if(resExp.ok) {
                 const exps = await resExp.json();
                 const container = document.getElementById('freelance-container');
@@ -786,7 +786,7 @@
             }
 
             // Projects
-            const resProj = await fetch('http://127.0.0.1:8000/api/projects/');
+            const resProj = await fetch('https://api.slancer.site/api/projects/');
             if(resProj.ok) {
                 const projects = await resProj.json();
                 const container = document.getElementById('projects-container');
@@ -835,7 +835,7 @@
             }
 
             // Blogs
-            const resBlog = await fetch('http://127.0.0.1:8000/api/blogs/');
+            const resBlog = await fetch('https://api.slancer.site/api/blogs/');
             if(resBlog.ok) {
                 const blogs = await resBlog.json();
                 const container = document.getElementById('blog-container');
