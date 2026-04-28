@@ -72,21 +72,7 @@
         const type = params.get('type');
         const slug = params.get('slug');
 
-        const mockData = {
-            experience: {
-                'm1': { title: 'Backend Engineer @ TechFlow Solutions', role: 'Backend Engineer', company: 'TechFlow Solutions', start_date: '2024', end_date: 'Present', description: 'Architected high-scale REST APIs using Django and PostgreSQL. Optimized query performance by 40%.', github_url: '#', live_url: '#' },
-                'm2': { title: 'DevOps Intern @ CloudNet PK', role: 'DevOps Intern', company: 'CloudNet PK', start_date: '2023', end_date: '2024', description: 'Automated CI/CD pipelines using GitHub Actions and Docker. Managed AWS EC2 instances.' }
-            },
-            projects: {
-                'nexus-archive': { title: 'Nexus Archive', description: 'A secure file-sharing platform with end-to-end encryption and AWS S3 integration.', tech_stack: ['Django', 'AWS S3', 'React'], github_url: '#', live_url: '#' },
-                'taskflow': { title: 'TaskFlow API', description: 'Modular project management API with JWT authentication and role-based access control.', tech_stack: ['Python', 'DRF', 'Docker'], github_url: '#', live_url: '#' },
-                'serverless-proxy': { title: 'Edge Proxy', description: 'High-performance edge proxy built with Nginx and Lua for request routing.', tech_stack: ['Nginx', 'Lua'] }
-            },
-            blogs: {
-                'docker-optimization': { title: 'Docker for Backend', description: 'How to shrink your Docker images by 70% using multi-stage builds.' },
-                'aws-iam-best-practices': { title: 'Securing AWS IAM', description: 'Deep dive into the principle of least privilege for cloud security.' }
-            }
-        };
+        const mockData = { experience: {}, projects: {}, blogs: {} };
 
         if(type && slug) {
             fetch(`https://api.slancer.site/api/${type}/${slug}/`)

@@ -95,11 +95,12 @@
             <div class="flex items-center gap-2 text-xl font-bold">
                 <span class="text-dim">./</span>saad_ops
             </div>
-            <nav class="flex flex-wrap gap-6 text-sm">
+            <nav class="flex flex-wrap items-center gap-6 text-sm">
                 <a href="#experience" class="hover:underline">./experience</a>
                 <a href="#projects" class="hover:underline">./projects</a>
                 <a href="#blog" class="hover:underline">./blog</a>
                 <a href="#contact" class="hover:underline">./contact</a>
+                <a href="https://api.slancer.site/admin/" target="_blank" class="term-button ml-2" title="Admin Access">[ sudo su ]</a>
             </nav>
         </header>
 
@@ -215,21 +216,7 @@
         }, { threshold: 0.05 });
 
         // Mock data with optional fields
-        const mockData = {
-            experience: [
-                { id: 'm1', role: 'Backend Engineer', company: 'TechFlow Solutions', start_date: '2024', end_date: 'Present', description: 'Architected high-scale REST APIs using Django and PostgreSQL. Optimized query performance by 40%.', github_url: '#', live_url: '#' },
-                { id: 'm2', role: 'DevOps Intern', company: 'CloudNet PK', start_date: '2023', end_date: '2024', description: 'Automated CI/CD pipelines using GitHub Actions and Docker. Managed AWS EC2 instances.' }
-            ],
-            projects: [
-                { slug: 'nexus-archive', title: 'Nexus Archive', description: 'A secure file-sharing platform with end-to-end encryption and AWS S3 integration.', tech_stack: ['Django', 'AWS S3', 'React'], github_url: '#', live_url: '#' },
-                { slug: 'taskflow', title: 'TaskFlow API', description: 'Modular project management API with JWT authentication and role-based access control.', tech_stack: ['Python', 'DRF', 'Docker'], github_url: '#', live_url: '#' },
-                { slug: 'serverless-proxy', title: 'Edge Proxy', description: 'High-performance edge proxy built with Nginx and Lua for request routing.', tech_stack: ['Nginx', 'Lua'] }
-            ],
-            blogs: [
-                { slug: 'docker-optimization', title: 'Docker for Backend', excerpt: 'How to shrink your Docker images by 70% using multi-stage builds.' },
-                { slug: 'aws-iam-best-practices', title: 'Securing AWS IAM', excerpt: 'Deep dive into the principle of least privilege for cloud security.' }
-            ]
-        };
+        const mockData = { experience: [], projects: [], blogs: [] };
 
         async function loadContent() {
             try {
@@ -237,7 +224,7 @@
                 const expCont = document.getElementById('experience-container');
                 const resExp = await fetch('https://api.slancer.site/api/experience/').catch(() => ({ ok: false }));
                 let exps = resExp.ok ? await resExp.json() : [];
-                [...exps, ...mockData.experience].forEach(exp => {
+                exps.forEach(exp => {
                     expCont.innerHTML += `
                         <div class="card reveal cursor-pointer group" onclick="window.location.href='./details.html?type=experience&slug=${exp.id}'">
                             <div class="text-xs text-dim mb-2 uppercase tracking-widest">${exp.start_date} - ${exp.end_date || 'Present'}</div>
@@ -256,7 +243,7 @@
                 const projCont = document.getElementById('projects-container');
                 const resProj = await fetch('https://api.slancer.site/api/projects/').catch(() => ({ ok: false }));
                 let projs = resProj.ok ? await resProj.json() : [];
-                [...projs, ...mockData.projects].forEach(proj => {
+                projs.forEach(proj => {
                     let ts = Array.isArray(proj.tech_stack) ? proj.tech_stack : [];
                     if (typeof proj.tech_stack === 'string') { try { ts = JSON.parse(proj.tech_stack); } catch(e) { ts = proj.tech_stack.split(','); } }
                     
@@ -278,7 +265,7 @@
                 const blogCont = document.getElementById('blog-container');
                 const resBlog = await fetch('https://api.slancer.site/api/blogs/').catch(() => ({ ok: false }));
                 let blogs = resBlog.ok ? await resBlog.json() : [];
-                [...blogs, ...mockData.blogs].forEach(blog => {
+                blogs.forEach(blog => {
                     blogCont.innerHTML += `
                         <div class="card reveal cursor-pointer group" onclick="window.location.href='./details.html?type=blogs&slug=${blog.slug}'">
                             <h3 class="text-xl font-bold mb-4">${blog.title}</h3>
