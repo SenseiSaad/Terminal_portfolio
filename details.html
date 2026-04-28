@@ -38,10 +38,11 @@
             font-weight: 600;
             color: #ffffff;
             margin-bottom: 1.5rem;
-            display: block; /* Removed flex to fix line-breaking */
+            display: block;
+            width: 100%;
             border-left: 3px solid #4ade80;
             padding: 8px 0 8px 12px;
-            background: linear-gradient(90deg, rgba(74, 222, 128, 0.05) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(74, 222, 128, 0.4) 0%, rgba(74, 222, 128, 0.05) 100%);
             word-wrap: break-word;
         }
         .prompt::before {
@@ -133,5 +134,53 @@
             document.getElementById('loading').innerHTML = "[!] ERR: INVALID_PARAMS.";
         }
     </script>
+
+    <script>
+        // Hamburger Menu Handle Fix
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            if(btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                    menu.classList.toggle('flex');
+                });
+                
+                menu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth < 768) {
+                            menu.classList.add('hidden');
+                            menu.classList.remove('flex');
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+
+    <script>
+        // Hamburger Menu Handle Fix
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            if(btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                    menu.classList.toggle('flex');
+                });
+                
+                menu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth < 768) {
+                            menu.classList.add('hidden');
+                            menu.classList.remove('flex');
+                        }
+                    });
+                });
+            }
+        });
+    </script>
 </body>
+
+
 </html>
