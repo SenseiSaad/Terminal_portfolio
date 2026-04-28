@@ -1,880 +1,337 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud & Backend Developer Portfolio</title>
-    
-    <!-- Tailwind CSS -->
+    <title>SaadOps // Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Tailwind Configuration & Custom Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace'],
-                    },
-                    colors: {
-                        cloud: {
-                            900: '#0a0f1c', // Deep background
-                            800: '#111827', // Card background
-                            700: '#1f2937', // Borders/Hover
-                            accent: '#06b6d4', // Cyan
-                            accentHover: '#0891b2',
-                        }
-                    }
+                    fontFamily: { mono: ['"Fira Code"', 'monospace'] },
+                    colors: { term: { bg: '#000000', text: '#ffffff', dim: '#888888' } }
                 }
             }
         }
     </script>
-
     <style>
-        body {
-            background-color: #0a0f1c;
-            color: #f3f4f6;
+        body { 
+            background-color: #000000; 
+            color: #ffffff; 
+            font-family: 'Fira Code', monospace;
             overflow-x: hidden;
         }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0f1c;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1f2937;
-            border-radius: 5px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #06b6d4;
+        
+        .terminal-header {
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+            margin-bottom: 24px;
         }
 
-        /* Scroll Reveal Animation Classes */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        .term-button {
+            border: 1px solid #ffffff;
+            padding: 4px 10px;
+            transition: all 0.2s;
+            display: inline-block;
+            cursor: pointer;
+            text-transform: lowercase;
+            font-size: 0.75rem;
         }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Alternating Project Reveal Logic */
-        .reveal-left {
-            opacity: 0;
-            transform: translateX(-50px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
-        .reveal-right {
-            opacity: 0;
-            transform: translateX(50px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
-        .reveal-left.active, .reveal-right.active {
-            opacity: 1;
-            transform: translateX(0);
+        .term-button:hover {
+            background-color: #ffffff;
+            color: #000000;
         }
 
-        /* Glowing Button Effect */
-        .btn-glow {
-            position: relative;
-        }
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            background: linear-gradient(45deg, #06b6d4, #3b82f6, #06b6d4);
-            z-index: -1;
-            border-radius: 9999px;
-            filter: blur(8px);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .btn-glow:hover::before {
-            opacity: 0.7;
+        .prompt::before {
+            content: "saad@portfolio:~$ ";
+            color: #888888;
         }
 
-        /* Animated Background Grid */
-        .bg-grid {
-            background-size: 40px 40px;
-            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            mask-image: linear-gradient(to bottom, transparent, black, transparent);
-            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        /* Horizontal Scroll Styling */
+        .h-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 24px;
+            padding-bottom: 16px;
         }
+        .h-scroll::-webkit-scrollbar { height: 4px; }
+        .h-scroll::-webkit-scrollbar-track { background: #111; }
+        .h-scroll::-webkit-scrollbar-thumb { background: #333; }
+        .h-scroll::-webkit-scrollbar-thumb:hover { background: #555; }
 
-        /* Typing cursor */
-        .typing-cursor::after {
-            content: '|';
-            animation: blink 1s step-end infinite;
-            color: #06b6d4;
+        .card {
+            flex: 0 0 calc(50% - 12px); /* 2 per row */
+            scroll-snap-align: start;
+            border: 1px solid #333;
+            padding: 24px;
+            transition: border-color 0.2s;
         }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        @media (min-width: 1024px) {
+            .card { flex: 0 0 calc(33.333% - 16px); } /* 3 per row */
         }
+        @media (max-width: 640px) {
+            .card { flex: 0 0 100%; } /* 1 per row */
+        }
+        .card:hover { border-color: #ffffff; }
 
-        /* Hide scrollbar for horizontal/vertical scrolling containers */
-        .hide-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none; /* Chrome, Safari and Opera */
+        .reveal { opacity: 0; transform: translateY(5px); transition: all 0.4s; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(-30px) translateX(15px); }
         }
     </style>
 </head>
-<body class="antialiased selection:bg-cloud-accent selection:text-white">
+<body class="p-6 md:p-12">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 top-0 bg-cloud-900/80 backdrop-blur-md border-b border-white/10 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold tracking-tighter text-white flex items-center gap-2">
-                <i data-lucide="cloud-lightning" class="text-cloud-accent"></i>
-                <span class="font-mono">SaadOps</span>
-            </a>
-            
-            <!-- Desktop Menu -->
-            <div class="hidden md:flex space-x-8 text-sm font-mono text-gray-400">
-                <a href="#about" class="hover:text-cloud-accent transition-colors">./about</a>
-                <a href="#freelance" class="hover:text-cloud-accent transition-colors">./freelance-work</a>
-                <a href="#projects" class="hover:text-cloud-accent transition-colors">./projects</a>
-                <a href="#blog" class="hover:text-cloud-accent transition-colors">./blog</a>
-                <a href="#resume" class="hover:text-cloud-accent transition-colors">./resume</a>
-                <a href="#contact" class="hover:text-cloud-accent transition-colors">./contact</a>
-                <a href="https://api.slancer.site/admin/login/?next=/admin/" target="_blank" class="text-cloud-accent hover:text-white transition-colors">./admin_login</a>
+    <div class="max-w-7xl mx-auto">
+        <!-- Header / Prompt -->
+        <header class="terminal-header flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="flex items-center gap-2 text-xl font-bold">
+                <span class="text-dim">./</span>saad_ops
             </div>
+            <nav class="flex flex-wrap gap-6 text-sm">
+                <a href="#experience" class="hover:underline">./experience</a>
+                <a href="#projects" class="hover:underline">./projects</a>
+                <a href="#blog" class="hover:underline">./blog</a>
+                <a href="#contact" class="hover:underline">./contact</a>
+            </nav>
+        </header>
 
-            <!-- Mobile Menu Button -->
-            <button class="md:hidden text-gray-300 hover:text-white" id="mobile-menu-btn">
-                <i data-lucide="menu"></i>
-            </button>
-        </div>
-        
-        <!-- Mobile Menu -->
-        <div class="md:hidden hidden bg-cloud-800 border-b border-white/10 absolute w-full" id="mobile-menu">
-            <div class="flex flex-col px-6 py-4 space-y-4 font-mono text-sm">
-                <a href="#about" class="mobile-link text-gray-300 hover:text-cloud-accent">./about</a>
-                <a href="#freelance" class="mobile-link text-gray-300 hover:text-cloud-accent">./freelance-work</a>
-                <a href="#projects" class="mobile-link text-gray-300 hover:text-cloud-accent">./projects</a>
-                <a href="#blog" class="mobile-link text-gray-300 hover:text-cloud-accent">./blog</a>
-                <a href="#resume" class="mobile-link text-gray-300 hover:text-cloud-accent">./resume</a>
-                <a href="#contact" class="mobile-link text-gray-300 hover:text-cloud-accent">./contact</a>
-                <a href="https://api.slancer.site/admin/login/?next=/admin/" target="_blank" class="mobile-link text-cloud-accent hover:text-white">./admin_login</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main>
-        
-        <!-- 1. Hero Section -->
-        <section id="hero" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-            <!-- Background Grid -->
-            <div class="absolute inset-0 bg-grid z-0"></div>
+        <!-- Main Content -->
+        <main class="space-y-24">
             
-            <div class="max-w-7xl mx-auto px-6 relative z-10 w-full flex flex-col items-start reveal">
-                <p class="font-mono text-cloud-accent mb-4">>&nbsp;Hello, world! I am</p>
-                <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-4">
-                    Saad <span class="text-transparent bg-clip-text bg-gradient-to-r from-cloud-accent to-blue-500">Ops</span>
+            <!-- Hero -->
+            <section id="about" class="space-y-6 relative">
+                <!-- Light Particles -->
+                <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div class="absolute w-1 h-1 bg-white rounded-full opacity-50" style="top: 20%; left: 10%; animation: float 6s ease-in-out infinite alternate;"></div>
+                    <div class="absolute w-1.5 h-1.5 bg-white rounded-full opacity-30" style="top: 60%; left: 80%; animation: float 8s ease-in-out infinite alternate-reverse;"></div>
+                    <div class="absolute w-0.5 h-0.5 bg-white rounded-full opacity-70" style="top: 80%; left: 30%; animation: float 5s ease-in-out infinite alternate;"></div>
+                </div>
+                <div class="prompt">whoami</div>
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight relative z-10">
+                    Backend Engineer <br>& Cloud DevOps.
                 </h1>
-                <h2 class="text-3xl md:text-5xl font-bold text-gray-400 mb-6 typing-cursor h-12 md:h-16" id="typewriter"></h2>
-                
-                <p class="text-gray-400 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
-                    Backend and DevOps Engineer with hands-on experience building production-ready REST APIs using Django and Django REST Framework, deployed fully on AWS cloud infrastructure.
+                <p class="max-w-2xl text-dim leading-relaxed relative z-10">
+                    I build high-performance APIs and automate complex cloud infrastructure. 
+                    Currently focused on scalable architectures with Django, Docker, and AWS.
                 </p>
-                
-                <div class="flex gap-4 flex-wrap">
-                    <a href="#projects" class="btn-glow bg-cloud-accent hover:bg-cloud-accentHover text-white px-8 py-3 rounded-full font-semibold transition-all">
-                        View Projects
-                    </a>
-                    <a href="https://api.slancer.site/admin/login/?next=/admin/" target="_blank" class="bg-gray-800 border border-gray-600 hover:border-cloud-accent hover:text-cloud-accent text-gray-300 px-8 py-3 rounded-full font-semibold transition-all flex items-center gap-2">
-                        <i data-lucide="lock" class="w-4 h-4"></i> Admin Login
-                    </a>
-                    <a href="#contact" class="bg-transparent border border-gray-600 hover:border-cloud-accent text-white px-8 py-3 rounded-full font-semibold transition-all flex items-center gap-2">
-                        Contact Me
-                    </a>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- 2 & 3. About & Skills Section -->
-        <section id="about" class="py-24 bg-cloud-800 relative">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="flex items-center gap-4 mb-12 reveal">
-                    <h2 class="text-3xl font-bold text-white"><span class="text-cloud-accent font-mono text-xl mr-2">./</span> About Me</h2>
-                    <div class="h-px bg-gray-700 flex-grow max-w-xs"></div>
+            <!-- Experience Section -->
+            <section id="experience" class="space-y-8">
+                <div class="prompt">cat experience.txt</div>
+                <div id="experience-container" class="h-scroll">
+                    <!-- Dynamic -->
                 </div>
+            </section>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
-                    <!-- About Text -->
-                    <div class="reveal-left">
-                        <p class="text-gray-400 leading-relaxed mb-6 text-lg">
-                            Hello! I am a Backend and DevOps Engineer passionate about architecting scalable systems. I have robust hands-on experience building production-ready REST APIs using Python, Django, and Django REST Framework.
-                        </p>
-                        <p class="text-gray-400 leading-relaxed mb-6 text-lg">
-                            I specialize in automating deployments and managing infrastructure. My day-to-day involves Linux system administration, managing containerization with Docker, reverse proxy setups with Nginx, SSL/TLS via Certbot, and provisioning AWS resources through Terraform.
-                        </p>
-                        <div class="p-4 bg-cloud-900 rounded-lg border border-gray-700 shadow-inner">
-                            <i data-lucide="terminal" class="text-cloud-accent mb-2"></i>
-                            <p class="font-mono text-sm text-gray-300">
-                                <span class="text-green-400">saad@server:~$</span> whoami <br>
-                                <span class="text-gray-400">Backend & Cloud DevOps Engineer</span>
-                            </p>
-                        </div>
+            <!-- Projects Section -->
+            <section id="projects" class="space-y-8">
+                <div class="prompt">cat projects.md</div>
+                <div id="projects-container" class="h-scroll">
+                    <!-- Dynamic -->
+                </div>
+            </section>
+
+            <!-- Resume Section -->
+            <section id="resume" class="space-y-8">
+                <div class="prompt">cat resume.html</div>
+                <div class="border border-zinc-800 p-8 max-w-4xl reveal">
+                    <h2 class="text-2xl font-bold mb-6 tracking-tight">Saad Waseem</h2>
+                    <div class="space-y-4 text-sm text-dim leading-relaxed">
+                        <p><strong class="text-white">Profile:</strong> Backend Engineer & Cloud DevOps specialist focused on scalable architectures, APIs, and cloud infrastructure.</p>
+                        <p><strong class="text-white">Skills:</strong> Python, Django, Docker, AWS (EC2, S3, IAM), CI/CD, PostgreSQL.</p>
+                        <p><strong class="text-white">Experience:</strong> Architecting REST APIs, optimizing database performance, automating deployment pipelines.</p>
                     </div>
-
-                    <!-- Skills Matrix -->
-                    <div class="reveal-right">
-                        <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                            <i data-lucide="cpu" class="text-cloud-accent"></i> Technical Proficiency
-                        </h3>
-                        
-                        <div class="space-y-6">
-                            <!-- Skill Category 1 -->
-                            <div>
-                                <h4 class="font-mono text-sm text-cloud-accent mb-3">Cloud & DevOps</h4>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">AWS (EC2, S3, RDS, IAM)</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">AWS CloudFront & Route 53</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">Docker & Kubernetes</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">Terraform</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">GitHub Actions</span>
-                                </div>
-                            </div>
-
-                            <!-- Skill Category 2 -->
-                            <div>
-                                <h4 class="font-mono text-sm text-cloud-accent mb-3">Backend Development</h4>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">Python</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">Django & DRF</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">PostgreSQL</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">JWT Authentication</span>
-                                </div>
-                            </div>
-
-                            <!-- Skill Category 3 -->
-                            <div>
-                                <h4 class="font-mono text-sm text-cloud-accent mb-3">Systems & Architecture</h4>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">Linux (Ubuntu)</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">Bash Scripting</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">Nginx & Certbot</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">Git & HTML/CSS</span>
-                                    <span class="px-3 py-1 bg-cloud-900 border border-gray-700 rounded text-sm text-gray-300 hover:border-cloud-accent transition-colors">Unity 2D & C#</span>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="mt-8 pt-6 border-t border-zinc-900">
+                        <a href="#" class="term-button" download>[ run download_resume ]</a>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- 4. Work Experience / Projects Section (Alternating) -->
-        <section id="freelance" class="py-24 bg-cloud-900">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="flex items-center gap-4 mb-16 reveal">
-                    <h2 class="text-3xl font-bold text-white"><span class="text-cloud-accent font-mono text-xl mr-2">./</span> Freelance Work</h2>
-                    <div class="h-px bg-gray-700 flex-grow max-w-xs"></div>
+            <!-- Blog Section -->
+            <section id="blog" class="space-y-8">
+                <div class="prompt">ls -l ./blog</div>
+                <div id="blog-container" class="h-scroll">
+                    <!-- Dynamic -->
                 </div>
+            </section>
 
-                <div class="relative">
-                    <!-- Vertical Scroll Container -->
-                    <div id="freelance-container" class="h-[75vh] min-h-[500px] overflow-y-auto snap-y snap-mandatory hide-scrollbar flex flex-col gap-32 py-12 px-2 border-y border-white/5">
-                    <span class="loader-text p-8 text-gray-400">Loading payload...</span>
-                 </div>
-                    
-                    <!-- Vertical Scroll Button -->
-                    <div class="absolute -bottom-6 left-1/2 -translate-x-1/2">
-                        <button onclick="scrollVertical('freelance-container')" class="animate-bounce bg-cloud-800 border border-gray-600 hover:border-cloud-accent text-cloud-accent p-3 rounded-full transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)] focus:outline-none">
-                            <i data-lucide="arrow-down" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- NEW: Technical Projects Section -->
-        <section id="projects" class="py-24 bg-cloud-800 border-t border-gray-800">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="flex items-center justify-between mb-12 reveal">
-                    <div class="flex items-center gap-4">
-                        <h2 class="text-3xl font-bold text-white"><span class="text-cloud-accent font-mono text-xl mr-2">./</span> Technical Projects</h2>
+            <!-- Contact -->
+            <section id="contact" class="space-y-8 border-t border-zinc-800 pt-16">
+                <div class="prompt">./send_message.sh</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="space-y-6">
+                        <form id="contact-form" class="grid grid-cols-1 gap-6">
+                            <input type="text" id="name" placeholder="Name" required class="bg-transparent border-b border-zinc-700 py-2 focus:outline-none focus:border-white transition-colors">
+                            <input type="email" id="email" placeholder="Email" required class="bg-transparent border-b border-zinc-700 py-2 focus:outline-none focus:border-white transition-colors">
+                            <textarea id="message" rows="3" placeholder="Message" required class="bg-transparent border-b border-zinc-700 py-2 focus:outline-none focus:border-white transition-colors resize-none"></textarea>
+                            <div>
+                                <button type="submit" class="term-button">[ run send ]</button>
+                            </div>
+                        </form>
+                        <div id="notification" class="hidden text-sm font-bold tracking-widest text-white uppercase">>> SUCCESS: YOUR FORM HAS BEEN SENT TO THE ADMIN.</div>
                     </div>
                     
-                    <!-- Horizontal Navigation Controls -->
-                    <div class="flex gap-3">
-                        <button onclick="scrollHorizontal('projects-container', -1)" class="p-2 rounded-full border border-gray-700 bg-cloud-900 text-gray-400 hover:text-cloud-accent hover:border-cloud-accent transition-colors focus:outline-none">
-                            <i data-lucide="chevron-left" class="w-5 h-5"></i>
-                        </button>
-                        <button onclick="scrollHorizontal('projects-container', 1)" class="p-2 rounded-full border border-gray-700 bg-cloud-900 text-gray-400 hover:text-cloud-accent hover:border-cloud-accent transition-colors focus:outline-none">
-                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="projects-container" class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-8 pb-8">
-                    <span class="loader-text p-8 text-gray-400">Loading payload...</span>
-                 </div>
-            </div>
-        </section>
-
-        <!-- 5. Blog Section -->
-        <section id="blog" class="py-24 bg-cloud-900">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="flex items-center justify-between mb-12 reveal">
-                    <div class="flex items-center gap-4">
-                        <h2 class="text-3xl font-bold text-white"><span class="text-cloud-accent font-mono text-xl mr-2">./</span> Tech Blog</h2>
-                    </div>
-                    
-                    <!-- Horizontal Navigation Controls -->
-                    <div class="flex items-center gap-4">
-                        <a href="#" class="hidden md:flex text-cloud-accent font-mono hover:underline items-center gap-2 mr-4">View all <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-                        <button onclick="scrollHorizontal('blog-container', -1)" class="p-2 rounded-full border border-gray-700 bg-cloud-800 text-gray-400 hover:text-cloud-accent hover:border-cloud-accent transition-colors focus:outline-none">
-                            <i data-lucide="chevron-left" class="w-5 h-5"></i>
-                        </button>
-                        <button onclick="scrollHorizontal('blog-container', 1)" class="p-2 rounded-full border border-gray-700 bg-cloud-800 text-gray-400 hover:text-cloud-accent hover:border-cloud-accent transition-colors focus:outline-none">
-                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="blog-container" class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-8 pb-8">
-                    <span class="loader-text p-8 text-gray-400">Loading payload...</span>
-                 </div>
-                
-                <div class="mt-8 text-center md:hidden">
-                    <a href="#" class="text-cloud-accent font-mono hover:underline">View all articles</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. Resume Section -->
-        <section id="resume" class="py-24 bg-cloud-800 relative">
-            <div class="max-w-5xl mx-auto px-6">
-                <div class="flex flex-col md:flex-row items-center justify-between mb-12 reveal">
-                    <div class="flex items-center gap-4 mb-4 md:mb-0">
-                        <h2 class="text-3xl font-bold text-white"><span class="text-cloud-accent font-mono text-xl mr-2">./</span> Resume</h2>
-                    </div>
-                    <!-- Download PDF Button -->
-                    <a href="javascript:void(0)" onclick="downloadResume()" class="btn-glow flex items-center gap-2 bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-cloud-accent text-white px-6 py-2 rounded font-mono text-sm transition-all shadow-lg">
-                        <i data-lucide="download" class="w-4 h-4"></i>
-                        Download PDF
-                    </a>
-                </div>
-
-                <!-- HTML Representation of Resume -->
-                <div class="bg-white text-gray-900 border border-gray-200 rounded p-8 md:p-14 shadow-2xl reveal relative overflow-hidden font-sans">
-                    <!-- Header -->
-                    <div class="text-center mb-8">
-                        <h1 class="text-4xl font-bold tracking-tight mb-2 uppercase text-black">Saad Waseem</h1>
-                        <p class="text-xl font-semibold text-gray-700 mb-3">Backend & Cloud DevOps Engineer</p>
-                        <div class="flex flex-wrap justify-center gap-4 text-sm text-gray-600">
-                            <span class="flex items-center gap-1"><i data-lucide="phone" class="w-4 h-4"></i> +92 349 043 6643</span>
-                            <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-4 h-4"></i> Lahore, Pakistan</span>
-                            <a href="#" class="flex items-center gap-1 hover:text-blue-600"><i data-lucide="mail" class="w-4 h-4"></i> Email</a>
-                            <a href="#" class="flex items-center gap-1 hover:text-blue-600"><i data-lucide="globe" class="w-4 h-4"></i> Portfolio</a>
-                            <a href="https://linkedin.com/in/saadwaseem" class="flex items-center gap-1 hover:text-blue-600"><i data-lucide="linkedin" class="w-4 h-4"></i> LinkedIn</a>
-                            <a href="https://github.com/saadwaseem" class="flex items-center gap-1 hover:text-blue-600"><i data-lucide="github" class="w-4 h-4"></i> GitHub</a>
-                        </div>
-                    </div>
-
-                    <!-- Professional Summary -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-bold text-black border-b-2 border-gray-300 pb-1 mb-3 uppercase tracking-wide">Professional Summary</h3>
-                        <p class="text-sm leading-relaxed">
-                            Backend and DevOps Engineer with hands-on experience building production-ready REST APIs using Django and Django REST Framework, deployed fully on AWS cloud infrastructure. Implemented Linux system administration, SSH management, and Ubuntu server configuration. Managed containerization with Docker, reverse proxy setup with Nginx, SSL/TLS management via Certbot, and Infrastructure as Code using Terraform for AWS resource provisioning.
-                        </p>
-                    </div>
-
-                    <!-- Technical Proficiency -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-bold text-black border-b-2 border-gray-300 pb-1 mb-3 uppercase tracking-wide">Technical Proficiency</h3>
-                        <ul class="text-sm space-y-1.5 list-none">
-                            <li><strong class="text-black">Cloud & DevOps:</strong> AWS (EC2, S3, RDS, CloudFront, Route 53, IAM, Cognito, Amplify, ECR), Docker, Kubernetes, Nginx, Gunicorn, GitHub Actions, Terraform, Certbot.</li>
-                            <li><strong class="text-black">Backend Development:</strong> Python, Django, Django REST Framework (DRF), PostgreSQL, JWT Authentication, ORM Optimization, Serializer logic.</li>
-                            <li><strong class="text-black">Systems & Architecture:</strong> Linux (Ubuntu), Bash Scripting, SSH Management, REST API Design, Microservices, CI/CD Automation.</li>
-                            <li><strong class="text-black">Additional Tools:</strong> Git, HTML5, CSS3, WordPress, Unity 2D, C#.</li>
+                    <div class="space-y-6 md:border-l md:border-zinc-800 md:pl-8">
+                        <h3 class="text-lg font-bold mb-4">Network_Connections</h3>
+                        <ul class="space-y-4 text-dim text-sm">
+                            <li class="flex items-center gap-2"><i data-lucide="github" class="w-4 h-4 text-white"></i> <span class="text-white">GitHub:</span> <a href="https://github.com/SenseiSaad" target="_blank" class="hover:underline">SenseiSaad</a></li>
+                            <li class="flex items-center gap-2"><i data-lucide="linkedin" class="w-4 h-4 text-white"></i> <span class="text-white">LinkedIn:</span> <a href="https://linkedin.com/in/saadwaseemcloud" target="_blank" class="hover:underline">saadwaseemcloud</a></li>
                         </ul>
                     </div>
-
-                    <!-- Professional Experience -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-bold text-black border-b-2 border-gray-300 pb-1 mb-3 uppercase tracking-wide">Professional Experience</h3>
-                        
-                        <div class="mb-4">
-                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline">
-                                <h4 class="text-base font-bold text-black">Freelance Web Developer</h4>
-                                <span class="text-sm font-semibold text-gray-700">June 2024 – August 2024</span>
-                            </div>
-                            <p class="text-sm font-semibold text-gray-700 italic mb-2">Celestial Church of Christ | Remote (USA)</p>
-                            <ul class="list-disc list-outside ml-4 text-sm space-y-1">
-                                <li>Implemented a 10+ page church website covering departments, staff profiles, service schedules, and event listings, establishing a digital presence from the ground up.</li>
-                                <li>Managed custom HTML/CSS alongside a WordPress CMS, enabling non-technical staff to update content with 80% less developer intervention.</li>
-                                <li>Accomplished full deployment to Vercel, achieving 99.9% uptime and reducing page load times by 30% through optimized DNS routing.</li>
-                                <li>Directed stakeholder requirement gathering across time zones to deliver a complete digital transition within a strict 90-day lifecycle.</li>
-                            </ul>
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline">
-                                <h4 class="text-base font-bold text-black">Frontend Web Developer</h4>
-                                <span class="text-sm font-semibold text-gray-700">May 2025 – June 2025</span>
-                            </div>
-                            <p class="text-sm font-semibold text-gray-700 italic mb-2">Minecraft-Themed Game Portal | Remote</p>
-                            <ul class="list-disc list-outside ml-4 text-sm space-y-1">
-                                <li>Managed the development of a custom Minecraft-themed webpage designed specifically to host an Unreal Engine game, supporting up to 500+ concurrent players.</li>
-                                <li>Implemented seamless browser-based game delivery via iFrame embedding, reducing user onboarding time by 100% (eliminating downloads) and increasing player retention by 40%.</li>
-                                <li>Directed the interface design, using custom-themed assets to achieve 100% visual parity with game mechanics.</li>
-                            </ul>
-                        </div>
-
-                        <div class="mb-2">
-                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline">
-                                <h4 class="text-base font-bold text-black">Freelance Game Developer</h4>
-                                <span class="text-sm font-semibold text-gray-700">Sept 2025 – Jan 2026</span>
-                            </div>
-                            <p class="text-sm font-semibold text-gray-700 italic mb-2">Private Client | Remote (Portugal)</p>
-                            <ul class="list-disc list-outside ml-4 text-sm space-y-1">
-                                <li>Managed the end-to-end development of a commercial 2D adventure title in Unity using C# scripting.</li>
-                                <li>Engineered 15+ complex enemy AI behaviors and optimizing frame rates to a stable 60 FPS on low-end devices.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Technical Projects -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-bold text-black border-b-2 border-gray-300 pb-1 mb-3 uppercase tracking-wide">Technical Projects</h3>
-                        
-                        <div class="mb-4">
-                            <div class="flex justify-between items-baseline mb-1">
-                                <h4 class="text-base font-bold text-black">Django Scalable Portfolio API</h4>
-                            </div>
-                            <p class="text-sm font-semibold text-gray-700 italic mb-2">Python, DRF, AWS, Docker, Nginx, PostgreSQL</p>
-                            <ul class="list-disc list-outside ml-4 text-sm space-y-1">
-                                <li>Implemented a production REST API with JWT authentication, handling 50+ concurrent requests per second and optimizing CRUD operations via ModelSerializers.</li>
-                                <li>Managed multi-stage Docker builds with Docker Compose, decreasing image sizes by 60% and accelerating deployment cycles to AWS ECR by 3 minutes.</li>
-                                <li>Achieved 25% improved data reliability by provisioning AWS RDS PostgreSQL and configuring AWS S3 for media storage.</li>
-                                <li>Accomplished automated CI/CD via GitHub Actions, reducing manual deployment time from 20 minutes to under 2 minutes per release.</li>
-                                <li>Improved server security and achieved an A+ SSL rating by configuring Nginx reverse proxies, Route 53 DNSSEC, and automated Certbot SSL renewals.</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between items-baseline mb-1">
-                                <h4 class="text-base font-bold text-black">Serverless Cloud Infrastructure</h4>
-                            </div>
-                            <p class="text-sm font-semibold text-gray-700 italic mb-2">AWS Amplify, CloudFront, Cognito, GitHub Actions | slancer.site</p>
-                            <ul class="list-disc list-outside ml-4 text-sm space-y-1">
-                                <li>Implemented a responsive static frontend on AWS Amplify, supporting sub-second page loads and triggering automated CI/CD builds on 100% of repository pushes.</li>
-                                <li>Improved global asset load times by 45% by configuring AWS CloudFront CDN for edge caching.</li>
-                                <li>Managed identity infrastructure supporting 100+ secure user sessions via AWS Cognito integration in protected site areas.</li>
-                                <li>Accomplished custom domain routing through AWS Route 53 with provisioned SSL via Amplify.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Education -->
-                    <div>
-                        <h3 class="text-lg font-bold text-black border-b-2 border-gray-300 pb-1 mb-3 uppercase tracking-wide">Education</h3>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline">
-                            <h4 class="text-base font-bold text-black">Bachelor of Science in Computer Science</h4>
-                            <span class="text-sm font-semibold text-gray-700">Sept 2023 – June 2027</span>
-                        </div>
-                        <p class="text-sm text-gray-800 mb-1">University of South Asia | Lahore, PK</p>
-                        <p class="text-sm italic text-gray-700">• Core Focus: Cloud Computing, Operating Systems (Linux).</p>
-                    </div>
-
                 </div>
+            </section>
+
+        </main>
+
+        <footer class="mt-24 border-t border-zinc-900 pt-8 flex justify-between text-xs text-dim">
+            <div>2026 // Saad Waseem // Terminal v2.0</div>
+            <div class="flex gap-6">
+                <a href="https://github.com/saadwaseem" target="_blank" class="hover:text-white">GitHub</a>
+                <a href="https://linkedin.com/in/saadwaseem" target="_blank" class="hover:text-white">LinkedIn</a>
             </div>
-        </section>
+        </footer>
+    </div>
 
-        <!-- 7. Contact Section -->
-        <section id="contact" class="py-24 bg-cloud-900 border-t border-gray-800">
-            <div class="max-w-3xl mx-auto px-6 text-center reveal">
-                <h2 class="font-mono text-cloud-accent mb-4">./ What's Next?</h2>
-                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Get In Touch</h2>
-                <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
-                    Although I'm not currently looking for any new opportunities, my inbox is always open. 
-                    Whether you have a question about cloud architecture, a potential project, or just want to say hi, I'll try my best to get back to you!
-                </p>
-
-                <!-- Form -->
-                <form id="contact-form" class="bg-cloud-900 p-8 rounded-xl border border-gray-700 text-left shadow-xl">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label for="name" class="block text-sm font-mono text-gray-400 mb-2">Name</label>
-                            <input type="text" id="name" required
-                                class="w-full bg-cloud-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cloud-accent transition-colors">
-                        </div>
-                        <div>
-                            <label for="email" class="block text-sm font-mono text-gray-400 mb-2">Email</label>
-                            <input type="email" id="email" required
-                                class="w-full bg-cloud-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cloud-accent transition-colors">
-                        </div>
-                    </div>
-                    <div class="mb-6">
-                        <label for="message" class="block text-sm font-mono text-gray-400 mb-2">Message</label>
-                        <textarea id="message" rows="5" required
-                            class="w-full bg-cloud-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cloud-accent transition-colors resize-none"></textarea>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn-glow bg-transparent border border-cloud-accent text-cloud-accent hover:bg-cloud-accent hover:text-white px-10 py-3 rounded font-mono transition-all w-full md:w-auto">
-                            Send Message
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Custom Notification Banner (Hidden by default) -->
-                <div id="notification" class="mt-6 p-4 rounded bg-green-900/50 border border-green-500 text-green-400 hidden flex items-center justify-center gap-2 font-mono text-sm">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i>
-                    Message sent successfully to General Admin!
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-cloud-900 border-t border-gray-800 py-8 text-center">
-        <div class="flex justify-center gap-6 mb-4">
-            <a href="https://github.com/saadwaseem" class="text-gray-500 hover:text-cloud-accent transition-colors"><i data-lucide="github"></i></a>
-            <a href="https://linkedin.com/in/saadwaseem" class="text-gray-500 hover:text-cloud-accent transition-colors"><i data-lucide="linkedin"></i></a>
-            <a href="#" class="text-gray-500 hover:text-cloud-accent transition-colors"><i data-lucide="globe"></i></a>
-        </div>
-        <p class="font-mono text-sm text-gray-500">
-            Designed & Built with <i data-lucide="code" class="w-3 h-3 inline"></i> by Saad Waseem
-        </p>
-    </footer>
-
-    <!-- JavaScript Interactions -->
     <script>
-        // Initialize Icons
         lucide.createIcons();
 
-        // 1. Mobile Menu Toggle
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-
-        mobileBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
+        // Reveal effect
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
             });
-        });
+        }, { threshold: 0.05 });
 
-        // 2. Navbar Scroll Effect (Blur & Transparency)
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('shadow-lg', 'bg-cloud-900/90');
-                navbar.classList.remove('bg-cloud-900/80');
-            } else {
-                navbar.classList.remove('shadow-lg', 'bg-cloud-900/90');
-                navbar.classList.add('bg-cloud-900/80');
-            }
-        });
-
-        // 3. Scroll Reveal Animation using Intersection Observer
-        const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-        
-        const revealOptions = {
-            threshold: 0.15,
-            rootMargin: "0px 0px -50px 0px"
+        // Mock data with optional fields
+        const mockData = {
+            experience: [
+                { id: 'm1', role: 'Backend Engineer', company: 'TechFlow Solutions', start_date: '2024', end_date: 'Present', description: 'Architected high-scale REST APIs using Django and PostgreSQL. Optimized query performance by 40%.', github_url: '#', live_url: '#' },
+                { id: 'm2', role: 'DevOps Intern', company: 'CloudNet PK', start_date: '2023', end_date: '2024', description: 'Automated CI/CD pipelines using GitHub Actions and Docker. Managed AWS EC2 instances.' }
+            ],
+            projects: [
+                { slug: 'nexus-archive', title: 'Nexus Archive', description: 'A secure file-sharing platform with end-to-end encryption and AWS S3 integration.', tech_stack: ['Django', 'AWS S3', 'React'], github_url: '#', live_url: '#' },
+                { slug: 'taskflow', title: 'TaskFlow API', description: 'Modular project management API with JWT authentication and role-based access control.', tech_stack: ['Python', 'DRF', 'Docker'], github_url: '#', live_url: '#' },
+                { slug: 'serverless-proxy', title: 'Edge Proxy', description: 'High-performance edge proxy built with Nginx and Lua for request routing.', tech_stack: ['Nginx', 'Lua'] }
+            ],
+            blogs: [
+                { slug: 'docker-optimization', title: 'Docker for Backend', excerpt: 'How to shrink your Docker images by 70% using multi-stage builds.' },
+                { slug: 'aws-iam-best-practices', title: 'Securing AWS IAM', excerpt: 'Deep dive into the principle of least privilege for cloud security.' }
+            ]
         };
 
-        const revealObserver = new IntersectionObserver(function(entries, observer) {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target); // Run once
-            });
-        }, revealOptions);
+        async function loadContent() {
+            try {
+                // Experience
+                const expCont = document.getElementById('experience-container');
+                const resExp = await fetch('https://api.slancer.site/api/experience/').catch(() => ({ ok: false }));
+                let exps = resExp.ok ? await resExp.json() : [];
+                [...exps, ...mockData.experience].forEach(exp => {
+                    expCont.innerHTML += `
+                        <div class="card reveal cursor-pointer group" onclick="window.location.href='./details.html?type=experience&slug=${exp.id}'">
+                            <div class="text-xs text-dim mb-2 uppercase tracking-widest">${exp.start_date} - ${exp.end_date || 'Present'}</div>
+                            <h3 class="text-xl font-bold mb-4">${exp.company}</h3>
+                            <div class="text-sm mb-6 text-dim line-clamp-2">${exp.description}</div>
+                            <div class="flex gap-3" onclick="event.stopPropagation()">
+                                <button onclick="window.location.href='./details.html?type=experience&slug=${exp.id}'" class="term-button">[ run cat ]</button>
+                                ${exp.github_url ? `<a href="${exp.github_url}" target="_blank" class="term-button">[ run repo ]</a>` : ''}
+                                ${exp.live_url ? `<a href="${exp.live_url}" target="_blank" class="term-button">[ run live ]</a>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
 
-        revealElements.forEach(el => {
-            revealObserver.observe(el);
-        });
+                // Projects
+                const projCont = document.getElementById('projects-container');
+                const resProj = await fetch('https://api.slancer.site/api/projects/').catch(() => ({ ok: false }));
+                let projs = resProj.ok ? await resProj.json() : [];
+                [...projs, ...mockData.projects].forEach(proj => {
+                    let ts = Array.isArray(proj.tech_stack) ? proj.tech_stack : [];
+                    if (typeof proj.tech_stack === 'string') { try { ts = JSON.parse(proj.tech_stack); } catch(e) { ts = proj.tech_stack.split(','); } }
+                    
+                    projCont.innerHTML += `
+                        <div class="card reveal cursor-pointer group" onclick="window.location.href='./details.html?type=projects&slug=${proj.slug}'">
+                            <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">${proj.title}</h3>
+                            <div class="text-sm mb-6 text-dim line-clamp-2">${proj.description}</div>
+                            ${ts.length ? `<div class="flex flex-wrap gap-2 mb-6">${ts.map(t => `<span class="text-[10px] text-zinc-500 font-mono">#${t.trim()}</span>`).join(' ')}</div>` : ''}
+                            <div class="flex gap-3" onclick="event.stopPropagation()">
+                                <button onclick="window.location.href='./details.html?type=projects&slug=${proj.slug}'" class="term-button">[ run cat ]</button>
+                                ${proj.github_url ? `<a href="${proj.github_url}" target="_blank" class="term-button">[ run repo ]</a>` : ''}
+                                ${proj.live_url ? `<a href="${proj.live_url}" target="_blank" class="term-button">[ run live ]</a>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
 
-        // 4. Hero Section Typewriter Effect
-        const phrases = [
-            "Backend Engineer",
-            "Cloud DevOps Engineer",
-            "Django Developer",
-            "AWS Solutions Architect"
-        ];
-        let i = 0;
-        let j = 0;
-        let currentPhrase = [];
-        let isDeleting = false;
-        let isEnd = false;
-        const typewriterEl = document.getElementById('typewriter');
+                // Blog
+                const blogCont = document.getElementById('blog-container');
+                const resBlog = await fetch('https://api.slancer.site/api/blogs/').catch(() => ({ ok: false }));
+                let blogs = resBlog.ok ? await resBlog.json() : [];
+                [...blogs, ...mockData.blogs].forEach(blog => {
+                    blogCont.innerHTML += `
+                        <div class="card reveal cursor-pointer group" onclick="window.location.href='./details.html?type=blogs&slug=${blog.slug}'">
+                            <h3 class="text-xl font-bold mb-4">${blog.title}</h3>
+                            <div class="text-sm mb-6 text-dim line-clamp-2">${blog.excerpt || ''}</div>
+                            <button class="term-button">[ run read ]</button>
+                        </div>
+                    `;
+                });
 
-        function loop() {
-            isEnd = false;
-            typewriterEl.innerHTML = currentPhrase.join('');
-
-            if (i < phrases.length) {
-                if (!isDeleting && j <= phrases[i].length) {
-                    currentPhrase.push(phrases[i][j]);
-                    j++;
-                    typewriterEl.innerHTML = currentPhrase.join('');
-                }
-
-                if (isDeleting && j <= phrases[i].length) {
-                    currentPhrase.pop(phrases[i][j]);
-                    j--;
-                    typewriterEl.innerHTML = currentPhrase.join('');
-                }
-
-                if (j == phrases[i].length) {
-                    isEnd = true;
-                    isDeleting = true;
-                }
-
-                if (isDeleting && j === 0) {
-                    currentPhrase = [];
-                    isDeleting = false;
-                    i++;
-                    if (i == phrases.length) {
-                        i = 0;
-                    }
-                }
-            }
-            const spedUp = Math.random() * (80 - 50) + 50;
-            const normalSpeed = Math.random() * (200 - 100) + 100;
-            
-            let time = normalSpeed;
-            if (isEnd) {
-                // 4 second delay for the first two phrases
-                if (i === 0 || i === 1) {
-                    time = 4000;
-                } else {
-                    time = 2000;
-                }
-            } else if (isDeleting) {
-                time = spedUp;
-            }
-
-            setTimeout(loop, time);
+                document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+                lucide.createIcons();
+            } catch (e) { console.error("ERR_LOAD", e); }
         }
-        
-        // Start typing effect on load
-        setTimeout(loop, 500);
 
-        // 5. Form Handling
-        const contactForm = document.getElementById('contact-form');
-        const notification = document.getElementById('notification');
-
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Prevent page reload
+        document.getElementById('contact-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            // Mock sending data to "general admin"
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
-            console.log(`Sending to Admin -> Name: ${name}, Email: ${email}`);
-            
-            // Show custom notification (avoiding alert())
-            notification.classList.remove('hidden');
-            contactForm.reset();
+            const message = document.getElementById('message').value;
+            const notification = document.getElementById('notification');
 
-            // Hide after 4 seconds
-            setTimeout(() => {
-                notification.classList.add('hidden');
-            }, 4000);
+            try {
+                // Determine the correct API base URL
+                const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://127.0.0.1:8002'
+                    : 'https://api.slancer.site';
+
+                const response = await fetch(`${baseUrl}/api/contact/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email, message })
+                });
+
+                if (response.ok) {
+                    notification.classList.remove('hidden');
+                    notification.innerHTML = '>> SUCCESS: YOUR FORM HAS BEEN SENT TO THE ADMIN.';
+                    e.target.reset();
+                } else {
+                    notification.classList.remove('hidden');
+                    notification.innerHTML = '>> ERROR: TRANSMISSION FAILED. PLEASE TRY AGAIN.';
+                }
+            } catch (error) {
+                notification.classList.remove('hidden');
+                notification.innerHTML = '>> ERROR: SYSTEM OFFLINE. TRANSMISSION FAILED.';
+            }
+
+            setTimeout(() => notification.classList.add('hidden'), 5000);
         });
 
-        // 6. Mock Download Resume
-        window.downloadResume = function() {
-            // In a real scenario, this would be an actual file path
-            // e.g. window.location.href = './assets/resume.pdf';
-            
-            const btn = document.querySelector('a[onclick="downloadResume()"]');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Generating PDF...';
-            lucide.createIcons();
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                lucide.createIcons();
-                // We use a custom notification pop up for the mock
-                const notification = document.createElement('div');
-                notification.className = "fixed bottom-4 right-4 bg-cloud-800 border border-cloud-accent text-white px-4 py-3 rounded shadow-xl font-mono text-sm z-50 flex items-center gap-2";
-                notification.innerHTML = '<i data-lucide="file-down" class="w-4 h-4 text-cloud-accent"></i> Resume download simulated!';
-                document.body.appendChild(notification);
-                lucide.createIcons();
-                
-                setTimeout(() => notification.remove(), 3000);
-            }, 1500);
-        }
-
-        // 7. Horizontal & Vertical Scroll Logic
-        window.scrollHorizontal = function(containerId, direction) {
-            const container = document.getElementById(containerId);
-            // Scroll by mostly full width minus a bit for a peek of the next card
-            const scrollAmount = container.clientWidth > 768 ? container.clientWidth / 2 : container.clientWidth * 0.85;
-            container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-        }
-
-        window.scrollVertical = function(containerId) {
-            const container = document.getElementById(containerId);
-            const scrollAmount = container.clientHeight * 0.8;
-            
-            // If near bottom, reset to top. Otherwise scroll down
-            if (container.scrollTop + container.clientHeight >= container.scrollHeight - 50) {
-                container.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                container.scrollBy({ top: scrollAmount, behavior: 'smooth' });
-            }
-        }
-
+        document.addEventListener("DOMContentLoaded", loadContent);
     </script>
-
-<script>
-    async function loadDynamicContent() {
-        try {
-            // Freelance / Experience
-            const resExp = await fetch('https://api.slancer.site/api/experience/');
-            if(resExp.ok) {
-                const exps = await resExp.json();
-                const container = document.getElementById('freelance-container');
-                if(container) {
-                    container.innerHTML = '';
-                    if(exps.length === 0) {
-                        container.innerHTML = '<div class="text-gray-400 p-6">No experience records found.</div>';
-                    } else {
-                        exps.forEach((exp, idx) => {
-                            let isReverse = idx % 2 !== 0;
-                            let rowClass = isReverse ? "md:flex-row-reverse md:text-left" : "md:flex-row md:text-right";
-                            let ulClass = isReverse ? "md:justify-start" : "md:justify-end";
-                            container.innerHTML += `
-                                <div onclick="window.location.href='./details.html?type=experience&slug=${exp.id}'" class="cursor-pointer flex flex-col ${isReverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-12 group reveal active snap-center shrink-0 w-full bg-cloud-900 border border-gray-800 hover:border-cloud-accent hover:bg-cloud-800/50 rounded-2xl p-6 transition-all duration-300" style="transition-delay: ${idx*100}ms;">
-                                    <div class="w-full md:w-1/2 relative rounded-xl overflow-hidden shadow-2xl border border-gray-700 transition-all duration-300">
-                                        <div class="absolute inset-0 bg-cloud-accent/10 group-hover:bg-transparent transition-all z-10 duration-300"></div>
-                                        ${exp.image ? `<img src="${exp.image}" alt="${exp.company}" class="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-105">` : '<div class="w-full h-48 bg-cloud-800 flex items-center justify-center"><i data-lucide="briefcase" class="text-gray-600 w-12 h-12"></i></div>'}
-                                    </div>
-                                    <div class="w-full md:w-1/2 ${isReverse ? 'text-left md:text-left' : 'md:text-right text-left'} flex flex-col justify-center">
-                                        <p class="font-mono text-cloud-accent text-sm mb-2">${exp.role} (${exp.start_date} – ${exp.end_date || 'Present'})</p>
-                                        <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-cloud-accent transition-colors">${exp.company}</h3>
-                                        <div class="bg-cloud-800/80 p-6 rounded-xl shadow-lg border border-white/5 mb-6 relative z-20 text-gray-400 text-left ${isReverse?'md:text-left':'md:text-right'} line-clamp-2 group-hover:border-cloud-accent/30 transition-colors">
-                                            ${exp.description}
-                                        </div>
-                                        <div class="flex ${isReverse ? 'justify-start md:justify-start' : 'justify-start md:justify-end'}">
-                                            <button class="inline-flex items-center gap-2 text-cloud-accent font-mono text-sm border border-cloud-accent px-6 py-3 rounded-full group-hover:bg-cloud-accent group-hover:text-white transition-all shadow-lg hover:scale-105 active:scale-95">
-                                                Read Full Details <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                    }
-                }
-            }
-
-            // Projects
-            const resProj = await fetch('https://api.slancer.site/api/projects/');
-            if(resProj.ok) {
-                const projects = await resProj.json();
-                const container = document.getElementById('projects-container');
-                if(container) {
-                    container.innerHTML = '';
-                    if(projects.length === 0) {
-                        container.innerHTML = '<div class="text-gray-400 p-6">No projects yet.</div>';
-                    } else {
-                        projects.forEach((proj, idx) => {
-                            let raw_ts = proj.tech_stack;
-                            let ts = [];
-                            if (Array.isArray(raw_ts)) { ts = raw_ts; }
-                            else if (raw_ts && Array.isArray(raw_ts.tech_stack)) { ts = raw_ts.tech_stack; }
-                            else if (typeof raw_ts === 'string') {
-                                try { let parsed = JSON.parse(raw_ts); ts = Array.isArray(parsed) ? parsed : (parsed.tech_stack || []); } 
-                                catch(e) { ts = raw_ts.split(',').map(s=>s.trim()); }
-                            }
-                            let stackHtml = ts.map(t => `<span>#${t}</span>`).join('');
-                            let linksHtml = '';
-                            if(proj.github_url) linksHtml += `<a href="${proj.github_url}" target="_blank" class="bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-cloud-accent text-white p-2.5 rounded-lg transition-all flex items-center gap-2" title="GitHub Repository"><i data-lucide="github" class="w-4 h-4"></i> <span class="text-xs font-mono">Repo</span></a>`;
-                            if(proj.live_url) linksHtml += `<a href="${proj.live_url}" target="_blank" class="bg-cloud-accent/10 hover:bg-cloud-accent border border-cloud-accent/50 text-cloud-accent hover:text-white p-2.5 rounded-lg transition-all flex items-center gap-2" title="Live URL"><i data-lucide="external-link" class="w-4 h-4"></i> <span class="text-xs font-mono">Live</span></a>`;
-                            
-                            container.innerHTML += `
-                            <div onclick="window.location.href='./details.html?type=projects&slug=${proj.slug}'" class="cursor-pointer flex flex-col w-[85vw] md:w-[calc(50%-1rem)] shrink-0 snap-center group reveal active bg-cloud-900 rounded-xl overflow-hidden border border-gray-800 hover:border-cloud-accent hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] transition-all duration-300" style="transition-delay: ${idx*100}ms;">
-                                <div class="p-8 flex-grow">
-                                    <div class="flex justify-between items-center mb-6">
-                                        <i data-lucide="folder-git-2" class="text-cloud-accent w-10 h-10"></i>
-                                        <div class="flex gap-3 text-gray-400" onclick="event.stopPropagation();">
-                                            ${linksHtml}
-                                        </div>
-                                    </div>
-                                    <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-cloud-accent transition-colors">${proj.title}</h3>
-                                    ${proj.image ? `<img src="${proj.image}" class="mb-4 w-full h-48 object-cover rounded-lg border border-gray-700 group-hover:border-cloud-accent/50 transition-colors">` : ''}
-                                    <div class="text-gray-400 text-sm mb-6 leading-relaxed line-clamp-2">${proj.description}</div>
-                                    
-                                    <button onclick="event.stopPropagation(); window.open('./details.html?type=projects&slug=${proj.slug}', '_blank')" class="inline-flex items-center gap-2 text-cloud-accent font-mono text-xs border border-cloud-accent/30 px-5 py-2.5 rounded-lg group-hover:border-cloud-accent group-hover:bg-cloud-accent group-hover:text-white transition-all shadow-lg active:scale-95">
-                                        View Details <i data-lucide="maximize-2" class="w-3 h-3"></i>
-                                    </button>
-                                </div>
-                                <div class="px-8 py-5 bg-cloud-800/50 border-t border-gray-700 group-hover:border-cloud-accent/30 transition-colors">
-                                    <div class="flex flex-wrap gap-3 font-mono text-xs text-cloud-accent/80">
-                                        ${stackHtml}
-                                    </div>
-                                </div>
-                            </div>
-                            `;
-                        });
-                    }
-                }
-            }
-
-            // Blogs
-            const resBlog = await fetch('https://api.slancer.site/api/blogs/');
-            if(resBlog.ok) {
-                const blogs = await resBlog.json();
-                const container = document.getElementById('blog-container');
-                if(container) {
-                    container.innerHTML = '';
-                    if(blogs.length === 0) {
-                        container.innerHTML = '<div class="text-gray-400 p-6">No blogs yet.</div>';
-                    } else {
-                        blogs.forEach((blog, idx) => {
-                             container.innerHTML += `
-                            <div onclick="window.location.href='./details.html?type=blogs&slug=${blog.slug}'" class="cursor-pointer flex flex-col w-[85vw] md:w-[calc(33.333%-1rem)] shrink-0 snap-center group reveal active bg-cloud-800 rounded-xl overflow-hidden border border-gray-700 hover:border-cloud-accent hover:-translate-y-2 transition-all duration-300" style="transition-delay: ${idx*100}ms;">
-                                ${blog.image ? `<img src="${blog.image}" class="w-full h-48 object-cover border-b border-gray-700">` : ''}
-                                <div class="p-6">
-                                    <div class="flex justify-between items-center mb-4 text-gray-400">
-                                        <i data-lucide="folder-code" class="text-cloud-accent w-8 h-8"></i>
-                                    </div>
-                                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cloud-accent transition-colors">${blog.title}</h3>
-                                    <div class="text-gray-400 text-sm mb-4 line-clamp-2">${blog.excerpt || ''}</div>
-                                </div>
-                            </div>
-                            `;
-                        });
-                    }
-                }
-            }
-
-            if(window.lucide) { window.lucide.createIcons(); }
-        } catch(e) { console.error("API Offline", e); }
-    }
-    document.addEventListener("DOMContentLoaded", () => { loadDynamicContent(); });
-</script>
 </body>
 </html>

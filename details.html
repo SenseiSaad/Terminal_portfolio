@@ -3,214 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Details - SaadOps</title>
+    <title>Details // Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['Fira Code', 'monospace'] },
-                    colors: { cloud: { 950: '#030712', 900: '#0a0f1c', 800: '#111827', accent: '#06b6d4', accentHover: '#0891b2' } }
+                    fontFamily: { mono: ['"Fira Code"', 'monospace'] },
+                    colors: { term: { bg: '#000000', text: '#ffffff', dim: '#888888' } }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #030712; color: #f3f4f6; }
-        .bg-grid {
-            background-size: 40px 40px;
-            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-        }
-        .glass {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        /* Rich text markdown styles */
-        .rich-text h1 { font-size: 2.25rem; font-weight: 800; margin-top: 2.5rem; margin-bottom: 1.25rem; color: #fff; }
-        .rich-text h2 { font-size: 1.875rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; color: #f3f4f6; }
-        .rich-text h3 { font-size: 1.5rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #f3f4f6; }
-        .rich-text p { margin-bottom: 1.5rem; line-height: 1.8; color: #d1d5db; font-size: 1.1rem; }
-        .rich-text ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.5rem; color: #d1d5db; }
-        .rich-text ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1.5rem; color: #d1d5db; }
-        .rich-text li { margin-bottom: 0.75rem; }
-        .rich-text a { color: #06b6d4; text-decoration: underline; transition: color 0.2s; }
-        .rich-text a:hover { color: #0891b2; }
-        .rich-text strong { color: #fff; font-weight: 600; }
-        .rich-text blockquote { border-left: 4px solid #06b6d4; padding-left: 1.5rem; color: #9ca3af; font-style: italic; margin-bottom: 1.5rem; background: rgba(6, 182, 212, 0.05); padding: 1rem 1.5rem; border-radius: 0 0.5rem 0.5rem 0; }
-        .rich-text img { max-width: 100%; border-radius: 1rem; margin: 2.5rem 0; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
-        .rich-text code { background: #1f2937; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: 'Fira Code', monospace; font-size: 0.9em; color: #06b6d4; }
+        body { background-color: #000000; color: #ffffff; font-family: 'Fira Code', monospace; }
+        
+        .rich-text h1 { font-size: 2.5rem; font-weight: 800; margin: 2rem 0 1.5rem; border-bottom: 1px solid #333; padding-bottom: 0.5rem; }
+        .rich-text h2 { font-size: 1.75rem; font-weight: 700; margin: 1.5rem 0 1rem; color: #eee; }
+        .rich-text p { margin-bottom: 1.5rem; line-height: 1.8; color: #ccc; }
+        .rich-text ul { list-style-type: "- "; padding-left: 1.5rem; margin-bottom: 1.5rem; color: #ccc; }
+        .rich-text li { margin-bottom: 0.5rem; }
+        .rich-text a { color: #fff; text-decoration: underline; }
+        .rich-text blockquote { border-left: 2px solid #555; padding-left: 1.5rem; color: #888; font-style: italic; margin-bottom: 1.5rem; }
+        .rich-text img { max-width: 100%; border: 1px solid #222; margin: 2rem 0; }
+
+        .term-button { border: 1px solid #fff; padding: 6px 16px; transition: all 0.2s; display: inline-block; cursor: pointer; text-transform: lowercase; font-size: 0.85rem; }
+        .term-button:hover { background-color: #fff; color: #000; }
+        
+        .prompt::before { content: "saad@portfolio:~$ "; color: #888; }
     </style>
 </head>
-<body class="antialiased min-h-screen relative">
-    <div class="fixed inset-0 bg-grid z-0 pointer-events-none"></div>
-    <div class="fixed top-0 left-0 right-0 h-96 bg-gradient-to-b from-cloud-accent/10 to-transparent z-0 pointer-events-none"></div>
+<body class="p-6 md:p-12 min-h-screen">
 
-    <nav class="sticky top-0 w-full z-50 glass border-b border-white/5 px-6 py-4">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <a href="./index.html" class="text-cloud-accent font-mono hover:text-white transition-colors flex items-center gap-2 group">
+    <div class="max-w-4xl mx-auto space-y-12">
+        <header class="flex justify-between items-center border-b border-zinc-800 pb-4">
+            <a href="./index.html" class="hover:underline flex items-center gap-2 group">
                 <i data-lucide="chevron-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
-                <span>cd ..</span>
+                <span>./back</span>
             </a>
-            <div class="text-gray-500 font-mono text-xs uppercase tracking-widest hidden sm:block">Details View // SaadOps</div>
-        </div>
-    </nav>
+            <div class="text-[10px] uppercase tracking-widest text-dim">Payload Details // Node_01</div>
+        </header>
 
-    <main class="max-w-5xl mx-auto px-6 py-16 relative z-10">
-        <div id="loading" class="flex flex-col items-center justify-center py-24 space-y-4">
-            <div class="w-12 h-12 border-4 border-cloud-accent/20 border-t-cloud-accent rounded-full animate-spin"></div>
-            <p class="text-cloud-accent font-mono animate-pulse">Fetching data payload...</p>
-        </div>
-        
+        <main id="loading" class="animate-pulse py-12 text-dim">INITIALIZING DATA_STREAM...</main>
+
         <article id="content-container" style="display: none;" class="space-y-12">
             <header class="space-y-6">
-                <div id="date-text" class="inline-block px-3 py-1 bg-cloud-accent/10 border border-cloud-accent/20 rounded-full text-cloud-accent font-mono text-xs"></div>
-                <h1 id="title" class="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-tight"></h1>
-                
-                <div id="tech-stack" class="flex flex-wrap gap-2 pt-2"></div>
-                
-                <div id="links-container" class="flex flex-wrap gap-4 pt-4" style="display: none;"></div>
+                <div id="date-text" class="text-xs text-dim uppercase tracking-widest"></div>
+                <h1 id="title" class="text-4xl md:text-6xl font-bold uppercase tracking-tight"></h1>
+                <div id="tech-stack" class="flex flex-wrap gap-3 font-mono text-[10px] text-white"></div>
+                <div id="links-container" class="flex flex-wrap gap-4 pt-4"></div>
             </header>
-
-            <div id="image-container" class="relative group" style="display: none;">
-                <div class="absolute -inset-4 bg-cloud-accent/20 blur-3xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <img id="image" src="" alt="Banner" class="relative w-full h-auto max-h-[70vh] object-cover rounded-2xl border border-white/10 shadow-2xl bg-cloud-900">
-            </div>
-            
-            <div class="glass p-8 md:p-12 rounded-3xl">
-                <div id="body-content" class="rich-text font-sans">
-                    <!-- Dynamic Content -->
-                </div>
+            <!-- Image logic removed by user request -->
+            <div id="body-content" class="rich-text">
+                <!-- Content -->
             </div>
 
-            <footer class="pt-12 border-t border-white/5 flex flex-col items-center gap-6">
-                <p class="text-gray-500 font-mono text-sm">End of record.</p>
-                <a href="./index.html" class="bg-gray-800 hover:bg-cloud-accent text-white px-8 py-3 rounded-full font-semibold transition-all flex items-center gap-2 group">
-                    <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
-                    Back to Portfolio
-                </a>
+            <footer class="pt-12 border-t border-zinc-900">
+                <a href="./index.html" class="term-button">[ run back ]</a>
             </footer>
         </article>
-    </main>
+    </div>
 
     <script>
-        // Initialize Lucide
         lucide.createIcons();
-
         const params = new URLSearchParams(window.location.search);
         const type = params.get('type');
         const slug = params.get('slug');
 
+        const mockData = {
+            experience: {
+                'm1': { title: 'Backend Engineer @ TechFlow Solutions', role: 'Backend Engineer', company: 'TechFlow Solutions', start_date: '2024', end_date: 'Present', description: 'Architected high-scale REST APIs using Django and PostgreSQL. Optimized query performance by 40%.', github_url: '#', live_url: '#' },
+                'm2': { title: 'DevOps Intern @ CloudNet PK', role: 'DevOps Intern', company: 'CloudNet PK', start_date: '2023', end_date: '2024', description: 'Automated CI/CD pipelines using GitHub Actions and Docker. Managed AWS EC2 instances.' }
+            },
+            projects: {
+                'nexus-archive': { title: 'Nexus Archive', description: 'A secure file-sharing platform with end-to-end encryption and AWS S3 integration.', tech_stack: ['Django', 'AWS S3', 'React'], github_url: '#', live_url: '#' },
+                'taskflow': { title: 'TaskFlow API', description: 'Modular project management API with JWT authentication and role-based access control.', tech_stack: ['Python', 'DRF', 'Docker'], github_url: '#', live_url: '#' },
+                'serverless-proxy': { title: 'Edge Proxy', description: 'High-performance edge proxy built with Nginx and Lua for request routing.', tech_stack: ['Nginx', 'Lua'] }
+            },
+            blogs: {
+                'docker-optimization': { title: 'Docker for Backend', description: 'How to shrink your Docker images by 70% using multi-stage builds.' },
+                'aws-iam-best-practices': { title: 'Securing AWS IAM', description: 'Deep dive into the principle of least privilege for cloud security.' }
+            }
+        };
+
         if(type && slug) {
             fetch(`https://api.slancer.site/api/${type}/${slug}/`)
-                .then(res => {
-                    if (!res.ok) throw new Error('API request failed');
-                    return res.json();
+                .then(res => res.ok ? res.json() : Promise.reject())
+                .catch(() => {
+                    if (mockData[type] && mockData[type][slug]) return mockData[type][slug];
+                    throw new Error('NOT_FOUND');
                 })
                 .then(data => {
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('content-container').style.display = 'block';
                     
-                    // Set title
-                    let docTitle = data.title || (data.role && data.company ? `${data.role} at ${data.company}` : 'Details');
-                    document.getElementById('title').textContent = docTitle;
-                    document.title = `${docTitle} - SaadOps`;
-
-                    // Set Date
+                    document.getElementById('title').textContent = data.title || (data.role ? `${data.role} @ ${data.company}` : 'RECORD_NULL');
+                    
                     let dateText = '';
-                    if (data.created_at) {
-                        dateText = new Date(data.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-                    } else if (data.start_date) {
-                        dateText = `${data.start_date} – ${data.end_date || 'Present'}`;
-                    }
-                    if (dateText) {
-                        document.getElementById('date-text').textContent = dateText;
-                    } else {
-                        document.getElementById('date-text').style.display = 'none';
-                    }
+                    if (data.created_at) dateText = `LOGGED: ${new Date(data.created_at).toLocaleDateString()}`;
+                    else if (data.start_date) dateText = `ACTIVE: ${data.start_date} -> ${data.end_date || 'Present'}`;
+                    document.getElementById('date-text').textContent = dateText;
 
-                    // Links
                     let linksHtml = '';
-                    if (data.github_url) {
-                        linksHtml += `
-                            <a href="${data.github_url}" target="_blank" class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 border border-white/10 px-5 py-2.5 rounded-xl transition-all shadow-lg hover:-translate-y-0.5">
-                                <i data-lucide="github" class="w-5 h-5 text-white"></i>
-                                <span class="font-semibold text-sm">GitHub Repository</span>
-                            </a>`;
-                    }
-                    if (data.live_url) {
-                        linksHtml += `
-                            <a href="${data.live_url}" target="_blank" class="flex items-center gap-2 bg-cloud-accent hover:bg-cloud-accentHover text-white px-5 py-2.5 rounded-xl transition-all shadow-lg hover:-translate-y-0.5 shadow-cloud-accent/20">
-                                <i data-lucide="external-link" class="w-5 h-5"></i>
-                                <span class="font-semibold text-sm">Live Preview</span>
-                            </a>`;
-                    }
+                    if (data.github_url) linksHtml += `<a href="${data.github_url}" target="_blank" class="term-button text-[10px]">[ run repo ]</a>`;
+                    if (data.live_url) linksHtml += `<a href="${data.live_url}" target="_blank" class="term-button text-[10px]">[ run live ]</a>`;
                     if (linksHtml) {
                         const lc = document.getElementById('links-container');
                         lc.innerHTML = linksHtml;
-                        lc.style.display = 'flex';
-                        lucide.createIcons();
                     }
-                    
-                    if(data.image) {
-                        const imgEl = document.getElementById('image');
-                        imgEl.src = data.image;
-                        document.getElementById('image-container').style.display = 'block';
-                    }
-                    
-                    // Tech Stack
-                    let raw_ts = data.tech_stack;
-                    let tsArray = [];
-                    if (Array.isArray(raw_ts)) { tsArray = raw_ts; }
-                    else if (raw_ts && Array.isArray(raw_ts.tech_stack)) { tsArray = raw_ts.tech_stack; }
-                    else if (typeof raw_ts === 'string') {
-                        try { let parsed = JSON.parse(raw_ts); tsArray = Array.isArray(parsed) ? parsed : (parsed.tech_stack || []); } 
-                        catch(e) { tsArray = raw_ts.split(',').map(s=>s.trim()); }
-                    }
+                    // Image logic removed
+                    let tsArray = Array.isArray(data.tech_stack) ? data.tech_stack : [];
+                    if (typeof data.tech_stack === 'string') { try { tsArray = JSON.parse(data.tech_stack); } catch(e) { tsArray = data.tech_stack.split(','); } }
                     if(tsArray.length > 0) {
-                        document.getElementById('tech-stack').innerHTML = tsArray.map(t => `<span class="bg-cloud-accent/10 border border-cloud-accent/20 text-cloud-accent px-3 py-1 rounded text-xs font-mono">#${t}</span>`).join('');
+                        document.getElementById('tech-stack').innerHTML = tsArray.map(t => `<span class="border border-zinc-800 px-2 py-1">[ #${t.trim()} ]</span>`).join(' ');
                     }
 
-                    // Content Injection
-                    let rawHtml = '';
-                    if (type === 'experience') {
-                        rawHtml = data.description || '';
-                    } else if (type === 'blogs') {
-                        rawHtml = data.content || data.description || '';
-                    } else {
-                        // Projects
-                        rawHtml = data.content || data.description || '';
-                    }
-                    document.getElementById('body-content').innerHTML = rawHtml;
-
-                    // Re-initialize icons for dynamic content
-                    lucide.createIcons();
-
+                    document.getElementById('body-content').innerHTML = data.content || data.description || 'NO_PAYLOAD_AVAILABLE';
                 })
-                .catch(err => {
-                    document.getElementById('loading').innerHTML = `
-                        <div class="text-center space-y-4">
-                            <i data-lucide="alert-circle" class="w-16 h-16 text-red-500 mx-auto"></i>
-                            <h2 class="text-2xl font-bold text-white">System Error 500</h2>
-                            <p class="text-gray-400">Unable to retrieve the requested record from slancer.site API.</p>
-                            <a href="/frontend/index.html" class="inline-block mt-4 text-cloud-accent hover:underline font-mono">Return home</a>
-                        </div>
-                    `;
-                    lucide.createIcons();
+                .catch(() => {
+                    document.getElementById('loading').innerHTML = "[!] ERR: RECORD_NOT_FOUND.";
                 });
         } else {
-            document.getElementById('loading').innerHTML = `
-                <div class="text-center space-y-4">
-                    <i data-lucide="help-circle" class="w-16 h-16 text-yellow-500 mx-auto"></i>
-                    <h2 class="text-2xl font-bold text-white">Invalid Request 400</h2>
-                    <p class="text-gray-400">Missing Type or Slug parameters in the payload header.</p>
-                    <a href="/frontend/index.html" class="inline-block mt-4 text-cloud-accent hover:underline font-mono">Return home</a>
-                </div>
-            `;
-            lucide.createIcons();
+            document.getElementById('loading').innerHTML = "[!] ERR: INVALID_PARAMS.";
         }
     </script>
 </body>
