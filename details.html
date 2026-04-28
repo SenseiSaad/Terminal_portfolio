@@ -34,15 +34,15 @@
         
         
         .prompt {
-            font-size: 1.25rem;
+            font-size: clamp(0.9rem, 4vw, 1.25rem);
             font-weight: 600;
             color: #ffffff;
             margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
+            display: block; /* Removed flex to fix line-breaking */
             border-left: 3px solid #4ade80;
-            padding-left: 12px;
+            padding: 8px 0 8px 12px;
             background: linear-gradient(90deg, rgba(74, 222, 128, 0.05) 0%, transparent 100%);
+            word-wrap: break-word;
         }
         .prompt::before {
             content: "saad@portfolio:~$ ";
