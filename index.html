@@ -347,48 +347,27 @@
     </script>
 
     <script>
-        // Hamburger Menu Handle Fix
         document.addEventListener('DOMContentLoaded', () => {
             const btn = document.getElementById('mobile-menu-btn');
             const menu = document.getElementById('mobile-menu');
-            if(btn && menu) {
-                btn.addEventListener('click', () => {
-                    menu.classList.toggle('hidden');
-                    menu.classList.toggle('flex');
-                });
-                
-                menu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        if (window.innerWidth < 768) {
-                            menu.classList.add('hidden');
-                            menu.classList.remove('flex');
-                        }
-                    });
-                });
-            }
-        });
-    </script>
 
-    <script>
-        // Hamburger Menu Handle Fix
-        document.addEventListener('DOMContentLoaded', () => {
-            const btn = document.getElementById('mobile-menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            if(btn && menu) {
-                btn.addEventListener('click', () => {
-                    menu.classList.toggle('hidden');
-                    menu.classList.toggle('flex');
-                });
-                
-                menu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        if (window.innerWidth < 768) {
-                            menu.classList.add('hidden');
-                            menu.classList.remove('flex');
-                        }
-                    });
-                });
+            if (!btn || !menu) {
+                return;
             }
+
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+                menu.classList.toggle('flex');
+            });
+
+            menu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 768) {
+                        menu.classList.add('hidden');
+                        menu.classList.remove('flex');
+                    }
+                });
+            });
         });
     </script>
 </body>
