@@ -17,6 +17,11 @@
             }
         }
     </script>
+    <script>
+        window.APP_CONFIG = {
+            API_BASE_URL: 'https://your-ec2-api-domain.example'
+        };
+    </script>
     <style>
         body { 
             background-color: #000000; 
@@ -124,7 +129,7 @@
                 <a href="#projects" class="hover:underline py-2 md:py-0 w-full md:w-auto border-b border-zinc-800 md:border-none">./projects</a>
                 <a href="#blog" class="hover:underline py-2 md:py-0 w-full md:w-auto border-b border-zinc-800 md:border-none">./blog</a>
                 <a href="#contact" class="hover:underline py-2 md:py-0 w-full md:w-auto border-b border-zinc-800 md:border-none">./contact</a>
-                <a href="https://api.slancer.site/admin/" target="_blank" class="term-button md:ml-2 mt-2 md:mt-0" title="Admin Access">[ sudo su ]</a>
+                <a href="#" id="admin-link" target="_blank" class="term-button md:ml-2 mt-2 md:mt-0" title="Admin Access">[ sudo su ]</a>
             </nav>
         </header>
 
@@ -228,6 +233,11 @@
 
     <script>
         lucide.createIcons();
+        const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || 'http://127.0.0.1:8000';
+        const adminLink = document.getElementById('admin-link');
+        if (adminLink) {
+            adminLink.href = `${API_BASE_URL}/admin/`;
+        }
 
         // Reveal effect
         const revealObserver = new IntersectionObserver((entries) => {
@@ -246,7 +256,7 @@
             try {
                 // Experience
                 const expCont = document.getElementById('experience-container');
-                const resExp = await fetch('https://api.slancer.site/api/experience/').catch(() => ({ ok: false }));
+                const resExp = await fetch(`${API_BASE_URL}/api/experience/`).catch(() => ({ ok: false }));
                 let exps = resExp.ok ? await resExp.json() : [];
                 exps.forEach(exp => {
                     expCont.innerHTML += `
@@ -265,7 +275,7 @@
 
                 // Projects
                 const projCont = document.getElementById('projects-container');
-                const resProj = await fetch('https://api.slancer.site/api/projects/').catch(() => ({ ok: false }));
+                const resProj = await fetch(`${API_BASE_URL}/api/projects/`).catch(() => ({ ok: false }));
                 let projs = resProj.ok ? await resProj.json() : [];
                 projs.forEach(proj => {
                     let ts = Array.isArray(proj.tech_stack) ? proj.tech_stack : [];
@@ -287,7 +297,7 @@
 
                 // Blog
                 const blogCont = document.getElementById('blog-container');
-                const resBlog = await fetch('https://api.slancer.site/api/blogs/').catch(() => ({ ok: false }));
+                const resBlog = await fetch(`${API_BASE_URL}/api/blogs/`).catch(() => ({ ok: false }));
                 let blogs = resBlog.ok ? await resBlog.json() : [];
                 blogs.forEach(blog => {
                     blogCont.innerHTML += `
@@ -314,12 +324,7 @@
             const notification = document.getElementById('notification');
 
             try {
-                // Determine the correct API base URL
-                const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://127.0.0.1:8002'
-                    : 'https://api.slancer.site';
-
-                const response = await fetch(`${baseUrl}/api/contact/`, {
+                const response = await fetch(`${API_BASE_URL}/api/contact/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

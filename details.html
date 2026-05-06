@@ -17,6 +17,11 @@
             }
         }
     </script>
+    <script>
+        window.APP_CONFIG = {
+            API_BASE_URL: 'https://your-ec2-api-domain.example'
+        };
+    </script>
     <style>
         body { background-color: #000000; color: #ffffff; font-family: 'Fira Code', monospace; }
         
@@ -87,6 +92,7 @@
 
     <script>
         lucide.createIcons();
+        const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || 'http://127.0.0.1:8000';
         const params = new URLSearchParams(window.location.search);
         const type = params.get('type');
         const slug = params.get('slug');
@@ -94,7 +100,7 @@
         const mockData = { experience: {}, projects: {}, blogs: {} };
 
         if(type && slug) {
-            fetch(`https://api.slancer.site/api/${type}/${slug}/`)
+            fetch(`${API_BASE_URL}/api/${type}/${slug}/`)
                 .then(res => res.ok ? res.json() : Promise.reject())
                 .catch(() => {
                     if (mockData[type] && mockData[type][slug]) return mockData[type][slug];
